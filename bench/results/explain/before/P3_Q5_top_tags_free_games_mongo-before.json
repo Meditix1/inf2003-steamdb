@@ -1,0 +1,258 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "steamdb.games",
+          "parsedQuery": {
+            "price": {
+              "$eq": 0
+            }
+          },
+          "indexFilterSet": false,
+          "queryHash": "21A7CE2E",
+          "planCacheShapeHash": "21A7CE2E",
+          "planCacheKey": "EC803FAA",
+          "optimizationTimeMillis": 0,
+          "cursorType": "regular",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "PROJECTION_DEFAULT",
+            "transformBy": {
+              "_id": true,
+              "t": {
+                "$objectToArray": [
+                  {
+                    "$cond": [
+                      {
+                        "$eq": [
+                          {
+                            "$type": [
+                              "$tags"
+                            ]
+                          },
+                          {
+                            "$const": "object"
+                          }
+                        ]
+                      },
+                      "$tags",
+                      {
+                        "$const": {}
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "filter": {
+                "price": {
+                  "$eq": 0
+                }
+              },
+              "nss": "steamdb.games",
+              "direction": "forward"
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 7818,
+          "executionTimeMillis": 1190,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 50000,
+          "executionStages": {
+            "isCached": false,
+            "stage": "PROJECTION_DEFAULT",
+            "nReturned": 7818,
+            "executionTimeMillisEstimate": 1099,
+            "works": 50001,
+            "advanced": 7818,
+            "needTime": 42182,
+            "needYield": 0,
+            "saveState": 28,
+            "restoreState": 27,
+            "isEOF": 1,
+            "transformBy": {
+              "_id": true,
+              "t": {
+                "$objectToArray": [
+                  {
+                    "$cond": [
+                      {
+                        "$eq": [
+                          {
+                            "$type": [
+                              "$tags"
+                            ]
+                          },
+                          {
+                            "$const": "object"
+                          }
+                        ]
+                      },
+                      "$tags",
+                      {
+                        "$const": {}
+                      }
+                    ]
+                  }
+                ]
+              }
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "filter": {
+                "price": {
+                  "$eq": 0
+                }
+              },
+              "nReturned": 7818,
+              "executionTimeMillisEstimate": 661,
+              "works": 50001,
+              "advanced": 7818,
+              "needTime": 42182,
+              "needYield": 0,
+              "saveState": 28,
+              "restoreState": 27,
+              "isEOF": 1,
+              "nss": "steamdb.games",
+              "direction": "forward",
+              "docsExamined": 50000
+            }
+          }
+        }
+      },
+      "nReturned": 7818,
+      "executionTimeMillisEstimate": 1139
+    },
+    {
+      "$unwind": {
+        "path": "$t"
+      },
+      "nReturned": 47458,
+      "executionTimeMillisEstimate": 1159
+    },
+    {
+      "$group": {
+        "_id": "$t.k",
+        "games": {
+          "$sum": {
+            "$const": 1
+          }
+        },
+        "$willBeMerged": false
+      },
+      "nReturned": 432,
+      "executionTimeMillisEstimate": 1181,
+      "maxAccumulatorMemoryUsageBytes": {
+        "games": 82944
+      },
+      "totalOutputDataSizeBytes": 106535,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "spilledBytes": 0,
+      "spilledRecords": 0,
+      "peakTrackedMemBytes": 94007
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "games": -1,
+          "_id": 1
+        },
+        "limit": 20
+      },
+      "totalDataSizeSortedBytesEstimate": 6416,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledBytes": 0,
+      "spilledRecords": 0,
+      "spilledDataStorageSize": 0,
+      "nReturned": 20,
+      "executionTimeMillisEstimate": 1181,
+      "peakTrackedMemBytes": 6934
+    }
+  ],
+  "queryShapeHash": "716C073E83B16D5D30614B913AA089E3CA32C3E5CA30DF06617879496D570555",
+  "serverInfo": {
+    "host": "b508008a5194",
+    "port": 27017,
+    "version": "8.3.11",
+    "gitVersion": "b8b83d6e6e1aed495578ad8c6f9234ad329c9955"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "games",
+    "pipeline": [
+      {
+        "$match": {
+          "price": 0
+        }
+      },
+      {
+        "$project": {
+          "t": {
+            "$objectToArray": {
+              "$cond": [
+                {
+                  "$eq": [
+                    {
+                      "$type": "$tags"
+                    },
+                    "object"
+                  ]
+                },
+                "$tags",
+                {}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "$unwind": "$t"
+      },
+      {
+        "$group": {
+          "_id": "$t.k",
+          "games": {
+            "$sum": 1
+          }
+        }
+      },
+      {
+        "$sort": {
+          "games": -1,
+          "_id": 1
+        }
+      },
+      {
+        "$limit": 20
+      }
+    ],
+    "cursor": {},
+    "$db": "steamdb"
+  },
+  "ok": 1
+}

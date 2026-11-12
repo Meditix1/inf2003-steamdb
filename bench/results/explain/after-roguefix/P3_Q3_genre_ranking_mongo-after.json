@@ -1,0 +1,192 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "steamdb.games",
+          "parsedQuery": {},
+          "indexFilterSet": false,
+          "queryHash": "8B11BDCD",
+          "planCacheShapeHash": "8B11BDCD",
+          "planCacheKey": "38906FD7",
+          "optimizationTimeMillis": 0,
+          "cursorType": "regular",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "PROJECTION_SIMPLE",
+            "transformBy": {
+              "genres": 1,
+              "wilson_score": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "nss": "steamdb.games",
+              "direction": "forward"
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 50000,
+          "executionTimeMillis": 409,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 50000,
+          "executionStages": {
+            "isCached": false,
+            "stage": "PROJECTION_SIMPLE",
+            "nReturned": 50000,
+            "executionTimeMillisEstimate": 229,
+            "works": 50001,
+            "advanced": 50000,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 25,
+            "restoreState": 24,
+            "isEOF": 1,
+            "transformBy": {
+              "genres": 1,
+              "wilson_score": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "nReturned": 50000,
+              "executionTimeMillisEstimate": 101,
+              "works": 50001,
+              "advanced": 50000,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 25,
+              "restoreState": 24,
+              "isEOF": 1,
+              "nss": "steamdb.games",
+              "direction": "forward",
+              "docsExamined": 50000
+            }
+          }
+        }
+      },
+      "nReturned": 50000,
+      "executionTimeMillisEstimate": 277
+    },
+    {
+      "$unwind": {
+        "path": "$genres"
+      },
+      "nReturned": 144076,
+      "executionTimeMillisEstimate": 361
+    },
+    {
+      "$group": {
+        "_id": "$genres",
+        "games": {
+          "$sum": {
+            "$const": 1
+          }
+        },
+        "avgScore": {
+          "$avg": "$wilson_score"
+        },
+        "$willBeMerged": false
+      },
+      "nReturned": 28,
+      "executionTimeMillisEstimate": 406,
+      "maxAccumulatorMemoryUsageBytes": {
+        "games": 5376,
+        "avgScore": 4704
+      },
+      "totalOutputDataSizeBytes": 7940,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "spilledBytes": 0,
+      "spilledRecords": 0,
+      "peakTrackedMemBytes": 10936
+    },
+    {
+      "$match": {
+        "games": {
+          "$gte": 50
+        }
+      },
+      "nReturned": 24,
+      "executionTimeMillisEstimate": 406
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "avgScore": -1
+        }
+      },
+      "totalDataSizeSortedBytesEstimate": 7018,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledBytes": 0,
+      "spilledRecords": 0,
+      "spilledDataStorageSize": 0,
+      "nReturned": 24,
+      "executionTimeMillisEstimate": 406,
+      "peakTrackedMemBytes": 7018
+    }
+  ],
+  "queryShapeHash": "040B769E8B158D5D2D64170E75041706F97E88FAE953579EBF96E17E750CD1F3",
+  "serverInfo": {
+    "host": "b508008a5194",
+    "port": 27017,
+    "version": "8.3.11",
+    "gitVersion": "b8b83d6e6e1aed495578ad8c6f9234ad329c9955"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "games",
+    "pipeline": [
+      {
+        "$unwind": "$genres"
+      },
+      {
+        "$group": {
+          "_id": "$genres",
+          "games": {
+            "$sum": 1
+          },
+          "avgScore": {
+            "$avg": "$wilson_score"
+          }
+        }
+      },
+      {
+        "$match": {
+          "games": {
+            "$gte": 50
+          }
+        }
+      },
+      {
+        "$sort": {
+          "avgScore": -1
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "steamdb"
+  },
+  "ok": 1
+}

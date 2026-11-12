@@ -1,0 +1,2 @@
+-> Limit: 24 row(s)  (cost=1.41 rows=2) (actual time=0.045..0.118 rows=24 loops=1)
+    -> Index range scan on game using idx_p5_score_id over (wilson_score = 0 AND 3841000 < app_id) OR (0 < wilson_score < NULL), with index condition: ((game.wilson_score < 0) or ((game.wilson_score = 0) and (game.app_id > 3841000)))  (cost=1.41 rows=2) (actual time=0.0433..0.114 rows=24 loops=1)

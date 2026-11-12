@@ -1,0 +1,139 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "steamdb.games",
+    "parsedQuery": {
+      "$and": [
+        {
+          "full_audio_languages": {
+            "$eq": "Japanese"
+          }
+        },
+        {
+          "mac": {
+            "$eq": true
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "EC5A6BE3",
+    "planCacheShapeHash": "EC5A6BE3",
+    "planCacheKey": "90B2AEB9",
+    "optimizationTimeMillis": 252,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "PROJECTION_SIMPLE",
+      "transformBy": {
+        "name": 1
+      },
+      "inputStage": {
+        "stage": "COLLSCAN",
+        "filter": {
+          "$and": [
+            {
+              "full_audio_languages": {
+                "$eq": "Japanese"
+              }
+            },
+            {
+              "mac": {
+                "$eq": true
+              }
+            }
+          ]
+        },
+        "nss": "steamdb.games",
+        "direction": "forward"
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 548,
+    "executionTimeMillis": 1734,
+    "totalKeysExamined": 0,
+    "totalDocsExamined": 50000,
+    "executionStages": {
+      "isCached": false,
+      "stage": "PROJECTION_SIMPLE",
+      "nReturned": 548,
+      "executionTimeMillisEstimate": 1284,
+      "works": 50001,
+      "advanced": 548,
+      "needTime": 49452,
+      "needYield": 0,
+      "saveState": 23,
+      "restoreState": 23,
+      "isEOF": 1,
+      "transformBy": {
+        "name": 1
+      },
+      "inputStage": {
+        "stage": "COLLSCAN",
+        "filter": {
+          "$and": [
+            {
+              "full_audio_languages": {
+                "$eq": "Japanese"
+              }
+            },
+            {
+              "mac": {
+                "$eq": true
+              }
+            }
+          ]
+        },
+        "nReturned": 548,
+        "executionTimeMillisEstimate": 1244,
+        "works": 50001,
+        "advanced": 548,
+        "needTime": 49452,
+        "needYield": 0,
+        "saveState": 23,
+        "restoreState": 23,
+        "isEOF": 1,
+        "nss": "steamdb.games",
+        "direction": "forward",
+        "docsExamined": 50000
+      }
+    }
+  },
+  "queryShapeHash": "BC926180DBA48DBDDEF437F7F00EE5898D96AFE7BCF7D47ABD064277A9B25631",
+  "command": {
+    "find": "games",
+    "filter": {
+      "full_audio_languages": "Japanese",
+      "mac": true
+    },
+    "projection": {
+      "name": 1
+    },
+    "$db": "steamdb"
+  },
+  "serverInfo": {
+    "host": "b508008a5194",
+    "port": 27017,
+    "version": "8.3.11",
+    "gitVersion": "b8b83d6e6e1aed495578ad8c6f9234ad329c9955"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1
+}

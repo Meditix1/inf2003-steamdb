@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderation · SteamDB</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <a href="/" class="logo">SteamDB</a>
+
+        <form id="searchForm" class="search-container">
+            <input id="searchInput" type="search" placeholder="Search games..." autocomplete="off">
+            <button type="submit">Search</button>
+        </form>
+
+        <nav id="accountNav"></nav>
+    </header>
+
+    <main class="page">
+
+        <h1>Reported reviews</h1>
+
+        <nav class="tabs" aria-label="Report status">
+            <a href="#open" data-tab="open">Open</a>
+            <a href="#resolved" data-tab="resolved">Resolved</a>
+            <a href="#dismissed" data-tab="dismissed">Dismissed</a>
+        </nav>
+
+        <section id="queue" aria-live="polite"></section>
+
+    </main>
+
+    <script src="/js/common.js"></script>
+    <script src="/js/moderation.js"></script>
+
+</body>
+
+</html>

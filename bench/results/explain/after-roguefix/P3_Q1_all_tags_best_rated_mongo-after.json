@@ -1,0 +1,334 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "steamdb.games",
+    "parsedQuery": {
+      "$and": [
+        {
+          "tag_names": {
+            "$eq": "Rogue-like"
+          }
+        },
+        {
+          "tag_names": {
+            "$eq": "Pixel Graphics"
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "2002BD49",
+    "planCacheShapeHash": "2002BD49",
+    "planCacheKey": "05F53921",
+    "optimizationTimeMillis": 106,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": true,
+      "stage": "LIMIT",
+      "limitAmount": 24,
+      "inputStage": {
+        "stage": "PROJECTION_SIMPLE",
+        "transformBy": {
+          "name": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "filter": {
+            "$and": [
+              {
+                "tag_names": {
+                  "$eq": "Rogue-like"
+                }
+              },
+              {
+                "tag_names": {
+                  "$eq": "Pixel Graphics"
+                }
+              }
+            ]
+          },
+          "nss": "steamdb.games",
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nss": "steamdb.games",
+            "keyPattern": {
+              "wilson_score": -1,
+              "_id": 1
+            },
+            "indexName": "idx_rating",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "wilson_score": [],
+              "_id": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "wilson_score": [
+                "[MaxKey, MinKey]"
+              ],
+              "_id": [
+                "[MinKey, MaxKey]"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "rejectedPlans": [
+      {
+        "isCached": false,
+        "stage": "PROJECTION_SIMPLE",
+        "transformBy": {
+          "name": 1
+        },
+        "inputStage": {
+          "stage": "SORT",
+          "sortPattern": {
+            "wilson_score": -1,
+            "_id": 1
+          },
+          "memLimit": 104857600,
+          "limitAmount": 24,
+          "type": "simple",
+          "inputStage": {
+            "stage": "FETCH",
+            "filter": {
+              "tag_names": {
+                "$eq": "Rogue-like"
+              }
+            },
+            "nss": "steamdb.games",
+            "inputStage": {
+              "stage": "IXSCAN",
+              "nss": "steamdb.games",
+              "keyPattern": {
+                "tag_names": 1
+              },
+              "indexName": "idx_tag_names",
+              "isMultiKey": true,
+              "multiKeyPaths": {
+                "tag_names": [
+                  "tag_names"
+                ]
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "tag_names": [
+                  "[\"Pixel Graphics\", \"Pixel Graphics\"]"
+                ]
+              }
+            }
+          }
+        }
+      },
+      {
+        "isCached": false,
+        "stage": "PROJECTION_SIMPLE",
+        "transformBy": {
+          "name": 1
+        },
+        "inputStage": {
+          "stage": "SORT",
+          "sortPattern": {
+            "wilson_score": -1,
+            "_id": 1
+          },
+          "memLimit": 104857600,
+          "limitAmount": 24,
+          "type": "simple",
+          "inputStage": {
+            "stage": "FETCH",
+            "filter": {
+              "tag_names": {
+                "$eq": "Pixel Graphics"
+              }
+            },
+            "nss": "steamdb.games",
+            "inputStage": {
+              "stage": "IXSCAN",
+              "nss": "steamdb.games",
+              "keyPattern": {
+                "tag_names": 1
+              },
+              "indexName": "idx_tag_names",
+              "isMultiKey": true,
+              "multiKeyPaths": {
+                "tag_names": [
+                  "tag_names"
+                ]
+              },
+              "isUnique": false,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "tag_names": [
+                  "[\"Rogue-like\", \"Rogue-like\"]"
+                ]
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 24,
+    "executionTimeMillis": 334,
+    "totalKeysExamined": 741,
+    "totalDocsExamined": 741,
+    "executionStages": {
+      "isCached": true,
+      "stage": "LIMIT",
+      "nReturned": 24,
+      "executionTimeMillisEstimate": 0,
+      "works": 742,
+      "advanced": 24,
+      "needTime": 717,
+      "needYield": 0,
+      "saveState": 3,
+      "restoreState": 3,
+      "isEOF": 1,
+      "limitAmount": 24,
+      "inputStage": {
+        "stage": "PROJECTION_SIMPLE",
+        "nReturned": 24,
+        "executionTimeMillisEstimate": 0,
+        "works": 741,
+        "advanced": 24,
+        "needTime": 717,
+        "needYield": 0,
+        "saveState": 3,
+        "restoreState": 3,
+        "isEOF": 0,
+        "transformBy": {
+          "name": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "filter": {
+            "$and": [
+              {
+                "tag_names": {
+                  "$eq": "Rogue-like"
+                }
+              },
+              {
+                "tag_names": {
+                  "$eq": "Pixel Graphics"
+                }
+              }
+            ]
+          },
+          "nReturned": 24,
+          "executionTimeMillisEstimate": 0,
+          "works": 741,
+          "advanced": 24,
+          "needTime": 717,
+          "needYield": 0,
+          "saveState": 3,
+          "restoreState": 3,
+          "isEOF": 0,
+          "nss": "steamdb.games",
+          "docsExamined": 741,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 741,
+            "executionTimeMillisEstimate": 0,
+            "works": 741,
+            "advanced": 741,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 3,
+            "restoreState": 3,
+            "isEOF": 0,
+            "nss": "steamdb.games",
+            "keyPattern": {
+              "wilson_score": -1,
+              "_id": 1
+            },
+            "indexName": "idx_rating",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "wilson_score": [],
+              "_id": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "wilson_score": [
+                "[MaxKey, MinKey]"
+              ],
+              "_id": [
+                "[MinKey, MaxKey]"
+              ]
+            },
+            "keysExamined": 741,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0,
+            "peakTrackedMemBytes": 0
+          }
+        }
+      }
+    }
+  },
+  "queryShapeHash": "3B328E37B9FE35C2B231FCCC3A5BB488E16001C99F839B60E14ECA968B854C4B",
+  "peakTrackedMemBytes": 13900,
+  "command": {
+    "find": "games",
+    "filter": {
+      "tag_names": {
+        "$all": [
+          "Rogue-like",
+          "Pixel Graphics"
+        ]
+      }
+    },
+    "sort": {
+      "wilson_score": -1,
+      "_id": 1
+    },
+    "projection": {
+      "name": 1
+    },
+    "limit": 24,
+    "$db": "steamdb"
+  },
+  "serverInfo": {
+    "host": "b508008a5194",
+    "port": 27017,
+    "version": "8.3.11",
+    "gitVersion": "b8b83d6e6e1aed495578ad8c6f9234ad329c9955"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1
+}

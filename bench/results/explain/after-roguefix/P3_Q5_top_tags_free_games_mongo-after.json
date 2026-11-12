@@ -1,0 +1,259 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "steamdb.games",
+          "parsedQuery": {
+            "price": {
+              "$eq": 0
+            }
+          },
+          "indexFilterSet": false,
+          "queryHash": "8C478336",
+          "planCacheShapeHash": "8C478336",
+          "planCacheKey": "B2340892",
+          "optimizationTimeMillis": 0,
+          "cursorType": "regular",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "PROJECTION_SIMPLE",
+            "transformBy": {
+              "tag_names": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "FETCH",
+              "nss": "steamdb.games",
+              "inputStage": {
+                "stage": "IXSCAN",
+                "nss": "steamdb.games",
+                "keyPattern": {
+                  "price": 1,
+                  "name_lower": 1,
+                  "_id": 1
+                },
+                "indexName": "idx_price",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "price": [],
+                  "name_lower": [],
+                  "_id": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "price": [
+                    "[0, 0]"
+                  ],
+                  "name_lower": [
+                    "[MinKey, MaxKey]"
+                  ],
+                  "_id": [
+                    "[MinKey, MaxKey]"
+                  ]
+                }
+              }
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 7818,
+          "executionTimeMillis": 81,
+          "totalKeysExamined": 7818,
+          "totalDocsExamined": 7818,
+          "executionStages": {
+            "isCached": false,
+            "stage": "PROJECTION_SIMPLE",
+            "nReturned": 7818,
+            "executionTimeMillisEstimate": 26,
+            "works": 7819,
+            "advanced": 7818,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 12,
+            "restoreState": 11,
+            "isEOF": 1,
+            "transformBy": {
+              "tag_names": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "FETCH",
+              "nReturned": 7818,
+              "executionTimeMillisEstimate": 19,
+              "works": 7819,
+              "advanced": 7818,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 12,
+              "restoreState": 11,
+              "isEOF": 1,
+              "nss": "steamdb.games",
+              "docsExamined": 7818,
+              "alreadyHasObj": 0,
+              "inputStage": {
+                "stage": "IXSCAN",
+                "nReturned": 7818,
+                "executionTimeMillisEstimate": 8,
+                "works": 7819,
+                "advanced": 7818,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 12,
+                "restoreState": 11,
+                "isEOF": 1,
+                "nss": "steamdb.games",
+                "keyPattern": {
+                  "price": 1,
+                  "name_lower": 1,
+                  "_id": 1
+                },
+                "indexName": "idx_price",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "price": [],
+                  "name_lower": [],
+                  "_id": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "price": [
+                    "[0, 0]"
+                  ],
+                  "name_lower": [
+                    "[MinKey, MaxKey]"
+                  ],
+                  "_id": [
+                    "[MinKey, MaxKey]"
+                  ]
+                },
+                "keysExamined": 7818,
+                "seeks": 1,
+                "dupsTested": 0,
+                "dupsDropped": 0,
+                "peakTrackedMemBytes": 0
+              }
+            }
+          }
+        }
+      },
+      "nReturned": 7818,
+      "executionTimeMillisEstimate": 38
+    },
+    {
+      "$unwind": {
+        "path": "$tag_names"
+      },
+      "nReturned": 47458,
+      "executionTimeMillisEstimate": 38
+    },
+    {
+      "$group": {
+        "_id": "$tag_names",
+        "games": {
+          "$sum": {
+            "$const": 1
+          }
+        },
+        "$willBeMerged": false
+      },
+      "nReturned": 432,
+      "executionTimeMillisEstimate": 73,
+      "maxAccumulatorMemoryUsageBytes": {
+        "games": 82944
+      },
+      "totalOutputDataSizeBytes": 106535,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "spilledBytes": 0,
+      "spilledRecords": 0,
+      "peakTrackedMemBytes": 94007
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "games": -1,
+          "_id": 1
+        },
+        "limit": 20
+      },
+      "totalDataSizeSortedBytesEstimate": 6416,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledBytes": 0,
+      "spilledRecords": 0,
+      "spilledDataStorageSize": 0,
+      "nReturned": 20,
+      "executionTimeMillisEstimate": 80,
+      "peakTrackedMemBytes": 6670
+    }
+  ],
+  "queryShapeHash": "462B39B3F90085609B34A3F3D918CAFE680D00C4619AB7C20C12DD95CC27CAED",
+  "serverInfo": {
+    "host": "b508008a5194",
+    "port": 27017,
+    "version": "8.3.11",
+    "gitVersion": "b8b83d6e6e1aed495578ad8c6f9234ad329c9955"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "games",
+    "pipeline": [
+      {
+        "$match": {
+          "price": 0
+        }
+      },
+      {
+        "$unwind": "$tag_names"
+      },
+      {
+        "$group": {
+          "_id": "$tag_names",
+          "games": {
+            "$sum": 1
+          }
+        }
+      },
+      {
+        "$sort": {
+          "games": -1,
+          "_id": 1
+        }
+      },
+      {
+        "$limit": 20
+      }
+    ],
+    "cursor": {},
+    "$db": "steamdb"
+  },
+  "ok": 1
+}

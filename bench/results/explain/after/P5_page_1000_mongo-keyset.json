@@ -1,0 +1,323 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "steamdb.games",
+    "parsedQuery": {
+      "$or": [
+        {
+          "$and": [
+            {
+              "wilson_score": {
+                "$eq": 0.43849391955098216
+              }
+            },
+            {
+              "_id": {
+                "$gt": "2798300"
+              }
+            }
+          ]
+        },
+        {
+          "wilson_score": {
+            "$lt": 0.43849391955098216
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "A04D4F3C",
+    "planCacheShapeHash": "A04D4F3C",
+    "planCacheKey": "C2B09A73",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "LIMIT",
+      "limitAmount": 24,
+      "inputStage": {
+        "stage": "PROJECTION_SIMPLE",
+        "transformBy": {
+          "name": 1,
+          "wilson_score": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "nss": "steamdb.games",
+          "inputStage": {
+            "stage": "SORT_MERGE",
+            "sortPattern": {
+              "wilson_score": -1,
+              "_id": 1
+            },
+            "inputStages": [
+              {
+                "stage": "IXSCAN",
+                "nss": "steamdb.games",
+                "keyPattern": {
+                  "wilson_score": -1,
+                  "_id": 1
+                },
+                "indexName": "idx_rating",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "wilson_score": [],
+                  "_id": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "wilson_score": [
+                    "[0.4384939195509822, 0.4384939195509822]"
+                  ],
+                  "_id": [
+                    "(\"2798300\", {})"
+                  ]
+                }
+              },
+              {
+                "stage": "IXSCAN",
+                "nss": "steamdb.games",
+                "keyPattern": {
+                  "wilson_score": -1,
+                  "_id": 1
+                },
+                "indexName": "idx_rating",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "wilson_score": [],
+                  "_id": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "wilson_score": [
+                    "(0.4384939195509822, -inf]"
+                  ],
+                  "_id": [
+                    "[MinKey, MaxKey]"
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 24,
+    "executionTimeMillis": 1,
+    "totalKeysExamined": 25,
+    "totalDocsExamined": 24,
+    "executionStages": {
+      "isCached": false,
+      "stage": "LIMIT",
+      "nReturned": 24,
+      "executionTimeMillisEstimate": 0,
+      "works": 50,
+      "advanced": 24,
+      "needTime": 25,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "limitAmount": 24,
+      "inputStage": {
+        "stage": "PROJECTION_SIMPLE",
+        "nReturned": 24,
+        "executionTimeMillisEstimate": 0,
+        "works": 49,
+        "advanced": 24,
+        "needTime": 25,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 0,
+        "transformBy": {
+          "name": 1,
+          "wilson_score": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "nReturned": 24,
+          "executionTimeMillisEstimate": 0,
+          "works": 49,
+          "advanced": 24,
+          "needTime": 25,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 0,
+          "nss": "steamdb.games",
+          "docsExamined": 24,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "SORT_MERGE",
+            "nReturned": 24,
+            "executionTimeMillisEstimate": 0,
+            "works": 49,
+            "advanced": 24,
+            "needTime": 25,
+            "needYield": 0,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 0,
+            "sortPattern": {
+              "wilson_score": -1,
+              "_id": 1
+            },
+            "dupsTested": 25,
+            "dupsDropped": 0,
+            "peakTrackedMemBytes": 351,
+            "inputStages": [
+              {
+                "stage": "IXSCAN",
+                "nReturned": 24,
+                "executionTimeMillisEstimate": 0,
+                "works": 24,
+                "advanced": 24,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 0,
+                "restoreState": 0,
+                "isEOF": 0,
+                "nss": "steamdb.games",
+                "keyPattern": {
+                  "wilson_score": -1,
+                  "_id": 1
+                },
+                "indexName": "idx_rating",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "wilson_score": [],
+                  "_id": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "wilson_score": [
+                    "[0.4384939195509822, 0.4384939195509822]"
+                  ],
+                  "_id": [
+                    "(\"2798300\", {})"
+                  ]
+                },
+                "keysExamined": 24,
+                "seeks": 1,
+                "dupsTested": 0,
+                "dupsDropped": 0,
+                "peakTrackedMemBytes": 0
+              },
+              {
+                "stage": "IXSCAN",
+                "nReturned": 1,
+                "executionTimeMillisEstimate": 0,
+                "works": 1,
+                "advanced": 1,
+                "needTime": 0,
+                "needYield": 0,
+                "saveState": 0,
+                "restoreState": 0,
+                "isEOF": 0,
+                "nss": "steamdb.games",
+                "keyPattern": {
+                  "wilson_score": -1,
+                  "_id": 1
+                },
+                "indexName": "idx_rating",
+                "isMultiKey": false,
+                "multiKeyPaths": {
+                  "wilson_score": [],
+                  "_id": []
+                },
+                "isUnique": false,
+                "isSparse": false,
+                "isPartial": false,
+                "indexVersion": 2,
+                "direction": "forward",
+                "indexBounds": {
+                  "wilson_score": [
+                    "(0.4384939195509822, -inf]"
+                  ],
+                  "_id": [
+                    "[MinKey, MaxKey]"
+                  ]
+                },
+                "keysExamined": 1,
+                "seeks": 1,
+                "dupsTested": 0,
+                "dupsDropped": 0,
+                "peakTrackedMemBytes": 0
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "queryShapeHash": "938D5FA91D53A4E2094F7CEF08E92C27CFC7D04DDFA186E0E0A2407A70AE8A7D",
+  "peakTrackedMemBytes": 351,
+  "command": {
+    "find": "games",
+    "filter": {
+      "$or": [
+        {
+          "wilson_score": {
+            "$lt": 0.43849391955098216
+          }
+        },
+        {
+          "wilson_score": 0.43849391955098216,
+          "_id": {
+            "$gt": "2798300"
+          }
+        }
+      ]
+    },
+    "sort": {
+      "wilson_score": -1,
+      "_id": 1
+    },
+    "projection": {
+      "name": 1,
+      "wilson_score": 1
+    },
+    "hint": "idx_rating",
+    "limit": 24,
+    "$db": "steamdb"
+  },
+  "serverInfo": {
+    "host": "b508008a5194",
+    "port": 27017,
+    "version": "8.3.11",
+    "gitVersion": "b8b83d6e6e1aed495578ad8c6f9234ad329c9955"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1
+}

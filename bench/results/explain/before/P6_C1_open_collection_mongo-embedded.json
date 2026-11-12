@@ -1,0 +1,127 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "steamdb.bench_collections_embedded",
+          "parsedQuery": {
+            "_id": {
+              "$eq": 1
+            }
+          },
+          "indexFilterSet": false,
+          "queryHash": "B774D27B",
+          "planCacheShapeHash": "B774D27B",
+          "planCacheKey": "7635556C",
+          "optimizationTimeMillis": 0,
+          "cursorType": "regular",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "EXPRESS_IXSCAN",
+            "keyPattern": "{ _id: 1 }",
+            "indexName": "_id_"
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 1,
+          "executionTimeMillis": 1,
+          "totalKeysExamined": 1,
+          "totalDocsExamined": 1,
+          "executionStages": {
+            "isCached": false,
+            "stage": "EXPRESS_IXSCAN",
+            "keyPattern": "{ _id: 1 }",
+            "indexName": "_id_",
+            "keysExamined": 1,
+            "docsExamined": 1,
+            "nReturned": 1
+          }
+        }
+      },
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 1
+    },
+    {
+      "$lookup": {
+        "from": "games",
+        "as": "g",
+        "localField": "games.app_id",
+        "foreignField": "_id",
+        "let": {},
+        "pipeline": [
+          {
+            "$project": {
+              "name": 1,
+              "header_image": 1,
+              "price": 1
+            }
+          }
+        ]
+      },
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 2,
+      "totalDocsExamined": 20,
+      "totalKeysExamined": 40,
+      "collectionScans": 0,
+      "indexesUsed": [
+        "_id_"
+      ]
+    }
+  ],
+  "queryShapeHash": "A730713D35711B431D2B88D44B7741F556D18C177FFB37B43D2EF2515CA89358",
+  "serverInfo": {
+    "host": "b508008a5194",
+    "port": 27017,
+    "version": "8.3.11",
+    "gitVersion": "b8b83d6e6e1aed495578ad8c6f9234ad329c9955"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "bench_collections_embedded",
+    "pipeline": [
+      {
+        "$match": {
+          "_id": 1
+        }
+      },
+      {
+        "$lookup": {
+          "from": "games",
+          "localField": "games.app_id",
+          "foreignField": "_id",
+          "pipeline": [
+            {
+              "$project": {
+                "name": 1,
+                "header_image": 1,
+                "price": 1
+              }
+            }
+          ],
+          "as": "g"
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "steamdb"
+  },
+  "ok": 1
+}

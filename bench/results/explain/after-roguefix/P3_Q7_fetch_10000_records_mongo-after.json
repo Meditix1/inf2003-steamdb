@@ -1,0 +1,170 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "steamdb.games",
+    "parsedQuery": {},
+    "indexFilterSet": false,
+    "queryHash": "EABA1C41",
+    "planCacheShapeHash": "EABA1C41",
+    "planCacheKey": "481BA9A4",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "LIMIT",
+      "limitAmount": 10000,
+      "inputStage": {
+        "stage": "PROJECTION_SIMPLE",
+        "transformBy": {
+          "name": 1,
+          "price": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "nss": "steamdb.games",
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nss": "steamdb.games",
+            "keyPattern": {
+              "_id": 1
+            },
+            "indexName": "_id_",
+            "isMultiKey": false,
+            "isUnique": true,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "_id": [
+                "[MinKey, MaxKey]"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 10000,
+    "executionTimeMillis": 35,
+    "totalKeysExamined": 10000,
+    "totalDocsExamined": 10000,
+    "executionStages": {
+      "isCached": false,
+      "stage": "LIMIT",
+      "nReturned": 10000,
+      "executionTimeMillisEstimate": 20,
+      "works": 10001,
+      "advanced": 10000,
+      "needTime": 0,
+      "needYield": 0,
+      "saveState": 1,
+      "restoreState": 1,
+      "isEOF": 1,
+      "limitAmount": 10000,
+      "inputStage": {
+        "stage": "PROJECTION_SIMPLE",
+        "nReturned": 10000,
+        "executionTimeMillisEstimate": 20,
+        "works": 10000,
+        "advanced": 10000,
+        "needTime": 0,
+        "needYield": 0,
+        "saveState": 1,
+        "restoreState": 1,
+        "isEOF": 0,
+        "transformBy": {
+          "name": 1,
+          "price": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "nReturned": 10000,
+          "executionTimeMillisEstimate": 10,
+          "works": 10000,
+          "advanced": 10000,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 1,
+          "restoreState": 1,
+          "isEOF": 0,
+          "nss": "steamdb.games",
+          "docsExamined": 10000,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 10000,
+            "executionTimeMillisEstimate": 0,
+            "works": 10000,
+            "advanced": 10000,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 1,
+            "restoreState": 1,
+            "isEOF": 0,
+            "nss": "steamdb.games",
+            "keyPattern": {
+              "_id": 1
+            },
+            "indexName": "_id_",
+            "isMultiKey": false,
+            "isUnique": true,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "_id": [
+                "[MinKey, MaxKey]"
+              ]
+            },
+            "keysExamined": 10000,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0,
+            "peakTrackedMemBytes": 0
+          }
+        }
+      }
+    }
+  },
+  "queryShapeHash": "1C9287F461B35D2E70ADEB7A2FAA253915F1AA85B4F7B6CE8412B5796DB08CAB",
+  "command": {
+    "find": "games",
+    "filter": {},
+    "sort": {
+      "_id": 1
+    },
+    "projection": {
+      "name": 1,
+      "price": 1
+    },
+    "limit": 10000,
+    "$db": "steamdb"
+  },
+  "serverInfo": {
+    "host": "b508008a5194",
+    "port": 27017,
+    "version": "8.3.11",
+    "gitVersion": "b8b83d6e6e1aed495578ad8c6f9234ad329c9955"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1
+}

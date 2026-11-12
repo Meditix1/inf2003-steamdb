@@ -1,0 +1,234 @@
+{
+  "explainVersion": "2",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "steamdb.bench_collection_items",
+          "parsedQuery": {},
+          "indexFilterSet": false,
+          "queryHash": "959EF190",
+          "planCacheShapeHash": "959EF190",
+          "planCacheKey": "D9D5938E",
+          "optimizationTimeMillis": 0,
+          "cursorType": "regular",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "queryPlan": {
+              "stage": "GROUP",
+              "planNodeId": 3,
+              "inputStage": {
+                "stage": "COLLSCAN",
+                "planNodeId": 1,
+                "filter": {},
+                "nss": "steamdb.bench_collection_items",
+                "direction": "forward"
+              }
+            },
+            "slotBasedPlan": {
+              "slots": "$$RESULT=s7 env: {  }",
+              "stages": "[3] project [s7 = newObj(\"_id\", s6, \"n\", s4)] \n[3] group [s6] [s4 = _internalCount::accumulate(s4, 1)] spillSlots[s5] mergingExprs[_internalCount::merge(s5)] \n[3] project [s6 = (s3 ?: null)] \n[1] scan generic [s1 = record, s2 = recordId] [s3 = app_id] @\"5421d4f6-e7f4-446e-9cba-94b98d2d807a\" "
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 2553,
+          "executionTimeMillis": 574,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 43602,
+          "executionStages": {
+            "stage": "project",
+            "planNodeId": 3,
+            "nReturned": 2553,
+            "executionTimeMillisEstimate": 229,
+            "opens": 1,
+            "closes": 1,
+            "saveState": 11,
+            "restoreState": 10,
+            "isEOF": 1,
+            "projections": {
+              "7": "newObj(\"_id\", s6, \"n\", s4) "
+            },
+            "inputStage": {
+              "stage": "group",
+              "planNodeId": 3,
+              "nReturned": 2553,
+              "executionTimeMillisEstimate": 229,
+              "opens": 1,
+              "closes": 1,
+              "saveState": 11,
+              "restoreState": 10,
+              "isEOF": 1,
+              "groupBySlots": [
+                6
+              ],
+              "expressions": {
+                "4": "_internalCount::accumulate(s4, 1) ",
+                "initExprs": {
+                  "4": null,
+                  "mergingExprs": {
+                    "5": "_internalCount::merge(s5) "
+                  }
+                }
+              },
+              "usedDisk": false,
+              "spills": 0,
+              "spilledBytes": 0,
+              "spilledRecords": 0,
+              "spilledDataStorageSize": 0,
+              "peakTrackedMemBytes": 127650,
+              "inputStage": {
+                "stage": "project",
+                "planNodeId": 3,
+                "nReturned": 43602,
+                "executionTimeMillisEstimate": 26,
+                "opens": 1,
+                "closes": 1,
+                "saveState": 11,
+                "restoreState": 10,
+                "isEOF": 1,
+                "projections": {
+                  "6": "(s3 ?: null) "
+                },
+                "inputStage": {
+                  "stage": "scan",
+                  "planNodeId": 1,
+                  "nReturned": 43602,
+                  "executionTimeMillisEstimate": 3,
+                  "opens": 1,
+                  "closes": 1,
+                  "saveState": 11,
+                  "restoreState": 10,
+                  "isEOF": 1,
+                  "numReads": 43602,
+                  "recordSlot": 1,
+                  "recordIdSlot": 2,
+                  "scanFieldNames": [
+                    "app_id"
+                  ],
+                  "scanFieldSlots": [
+                    3
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "nReturned": 2553,
+      "executionTimeMillisEstimate": 236
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "n": -1,
+          "_id": 1
+        },
+        "limit": 10
+      },
+      "totalDataSizeSortedBytesEstimate": 3170,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledBytes": 0,
+      "spilledRecords": 0,
+      "spilledDataStorageSize": 0,
+      "nReturned": 10,
+      "executionTimeMillisEstimate": 236,
+      "peakTrackedMemBytes": 3170
+    },
+    {
+      "$lookup": {
+        "from": "games",
+        "as": "g",
+        "localField": "_id",
+        "foreignField": "_id",
+        "let": {},
+        "pipeline": [
+          {
+            "$project": {
+              "name": 1,
+              "header_image": 1,
+              "price": 1
+            }
+          }
+        ]
+      },
+      "nReturned": 10,
+      "executionTimeMillisEstimate": 239,
+      "totalDocsExamined": 10,
+      "totalKeysExamined": 10,
+      "collectionScans": 0,
+      "indexesUsed": [
+        "_id_"
+      ]
+    }
+  ],
+  "queryShapeHash": "ED91F03E8F7657207B6204BF547FDBFC10A805D2DDB3900133614E82974EEDA5",
+  "peakTrackedMemBytes": 127650,
+  "serverInfo": {
+    "host": "b508008a5194",
+    "port": 27017,
+    "version": "8.3.11",
+    "gitVersion": "b8b83d6e6e1aed495578ad8c6f9234ad329c9955"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "bench_collection_items",
+    "pipeline": [
+      {
+        "$group": {
+          "_id": "$app_id",
+          "n": {
+            "$sum": 1
+          }
+        }
+      },
+      {
+        "$sort": {
+          "n": -1,
+          "_id": 1
+        }
+      },
+      {
+        "$limit": 10
+      },
+      {
+        "$lookup": {
+          "from": "games",
+          "localField": "_id",
+          "foreignField": "_id",
+          "pipeline": [
+            {
+              "$project": {
+                "name": 1,
+                "header_image": 1,
+                "price": 1
+              }
+            }
+          ],
+          "as": "g"
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "steamdb"
+  },
+  "ok": 1
+}

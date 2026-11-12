@@ -1,0 +1,3 @@
+-> Nested loop inner join  (cost=9.26 rows=20) (actual time=0.0291..0.0991 rows=20 loops=1)
+    -> Covering index lookup on cg using idx_cg_order (collection_id=1)  (cost=2.26 rows=20) (actual time=0.0154..0.0203 rows=20 loops=1)
+    -> Single-row index lookup on g using PRIMARY (app_id=cg.game_id)  (cost=0.255 rows=1) (actual time=0.00366..0.0037 rows=1 loops=20)

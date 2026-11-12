@@ -1,0 +1,409 @@
+#!/usr/bin/env node
+// =========================================================
+// Benchmark runner for the INF2003 performance analysis.
+//
+//   P1  homepage game queries, before vs after the MongoDB clean-up (MongoDB only)
+//   P2  index field order: "Best of 2019" (MySQL + MongoDB)
+//   P3  the same game questions on MySQL steamdb_bench vs MongoDB games
+//   P4  correlated subquery vs rewrite: "games priced below genre average"
+//   P5  deep pages: OFFSET/skip vs keyset pagination
+//   P6  collections: MySQL JOIN vs MongoDB embedded vs MongoDB referenced
+//
+// Usage, from ~/steamdb-web:
+//   read -s -p "MySQL root password: " P; echo
+//   BENCH_MYSQL_PASSWORD="$P" node scripts/bench/bench.js --suite all --impl before --label before
+//   (after the clean-up:)  ... --suite all --impl after --label after
+//   unset P
+// Options: --suite p1|p2|p3|p4|p5|p6|all   --impl before|after   --label <name>
+//          --runs 30   --warmup 3
+//
+// Method: one Node process times every implementation with process.hrtime;
+// warm-up runs first, then timed runs that alternate between implementations
+// so none always gets the warmer cache. Each query's explain output is saved
+// as evidence. Results go to bench/results/ as JSON plus one CSV row per
+// query and implementation in bench/results/summary.csv.
+// =========================================================
+
+const path = require("path");
+const fs = require("fs");
+const os = require("os");
+require("dotenv").config({ path: path.join(__dirname, "..", "..", ".env") });
+
+const mysqlLib = require("mysql2/promise");
+const { connectMongo, getMongoDB } = require("../../db/mongodb");
+
+function arg(name, fallback) {
+    const i = process.argv.indexOf(`--${name}`);
+    return i > -1 && process.argv[i + 1] ? process.argv[i + 1] : fallback;
+}
+const SUITE = arg("suite", "all");
+const IMPL = arg("impl", "before");
+const LABEL = arg("label", IMPL);
+const RUNS = Number(arg("runs", 30));
+const WARMUP = Number(arg("warmup", 3));
+const OUT_DIR = path.join(__dirname, "..", "..", "bench", "results");
+const STAMP = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
+
+if (!["before", "after"].includes(IMPL)) throw new Error("--impl must be before or after");
+
+
+// ---------- Explain helpers ----------
+
+const PLAN_STAGES = new Set(["COLLSCAN", "IXSCAN", "EXPRESS_IXSCAN", "IDHACK", "FETCH", "SORT", "COUNT_SCAN",
+    "EQ_LOOKUP", "GROUP", "TEXT_MATCH", "SORT_MERGE", "AND_SORTED", "AND_HASH", "OR"]);
+
+// Walk any MongoDB explain output: plan stages used, and the largest
+// docs/keys examined figure reported anywhere in it
+function summariseMongoExplain(ex) {
+    const stages = [];
+    let docs = 0, keys = 0;
+    const walk = (v) => {
+        if (Array.isArray(v)) return v.forEach(walk);
+        if (!v || typeof v !== "object") return;
+        for (const [k, val] of Object.entries(v)) {
+            if (k === "stage" && PLAN_STAGES.has(val) && !stages.includes(val)) stages.push(val);
+            if ((k === "totalDocsExamined" || k === "docsExamined") && typeof val === "number") docs = Math.max(docs, val);
+            if ((k === "totalKeysExamined" || k === "keysExamined") && typeof val === "number") keys = Math.max(keys, val);
+            if (k.startsWith("$") && k !== "$cursor" && !stages.includes(k) && ["$lookup", "$unwind", "$group", "$sort", "$facet"].includes(k)) stages.push(k);
+            walk(val);
+        }
+    };
+    walk(ex);
+    return { plan: stages.join(" > "), docsExamined: docs, keysExamined: keys };
+}
+
+function saveExplain(name, content) {
+    const dir = path.join(OUT_DIR, "explain", LABEL);
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, name), typeof content === "string" ? content : JSON.stringify(content, null, 2));
+}
+
+
+// ---------- Timing ----------
+
+const results = [];
+
+function stats(times) {
+    const s = [...times].sort((a, b) => a - b);
+    const pct = (p) => s[Math.min(s.length - 1, Math.ceil((p / 100) * s.length) - 1)];
+    const mean = s.reduce((a, b) => a + b, 0) / s.length;
+    return {
+        median_ms: +pct(50).toFixed(3), p95_ms: +pct(95).toFixed(3), mean_ms: +mean.toFixed(3),
+        min_ms: +s[0].toFixed(3), max_ms: +s[s.length - 1].toFixed(3)
+    };
+}
+
+// impls: [{ name, run: async (i) => rowCount, explain: async () => {...} }]
+// Each run i gets a parameter index, so queries can rotate through test values.
+async function measure(experiment, query, impls) {
+    process.stdout.write(`  ${experiment} ${query} `);
+    const times = Object.fromEntries(impls.map((m) => [m.name, []]));
+    const rows = {};
+
+    for (let w = 0; w < WARMUP; w++) for (const m of impls) await m.run(w);
+
+    for (let r = 0; r < RUNS; r++) {
+        // rotate which implementation goes first each round
+        for (let k = 0; k < impls.length; k++) {
+            const m = impls[(r + k) % impls.length];
+            const t0 = process.hrtime.bigint();
+            const n = await m.run(r);
+            times[m.name].push(Number(process.hrtime.bigint() - t0) / 1e6);
+            if (r === 0) rows[m.name] = n;
+        }
+        if (r % 10 === 9) process.stdout.write(".");
+    }
+
+    for (const m of impls) {
+        let ev = { plan: "", docsExamined: "", keysExamined: "" };
+        if (m.explain) {
+            try {
+                const ex = await m.explain();
+                if (typeof ex === "string") { saveExplain(`${experiment}_${query}_${m.name}.txt`, ex); ev.plan = "see explain file"; }
+                else { saveExplain(`${experiment}_${query}_${m.name}.json`, ex); ev = summariseMongoExplain(ex); }
+            } catch (err) { ev.plan = `explain failed: ${err.message}`; }
+        }
+        results.push({ date: new Date().toISOString(), label: LABEL, experiment, query, impl: m.name,
+            runs: RUNS, ...stats(times[m.name]), rows: rows[m.name], ...ev });
+    }
+    console.log(" done");
+}
+
+
+// ---------- P1: homepage queries (MongoDB) ----------
+
+const P1_CASES = {
+    home_default: {},
+    search_portal: { search: "portal" },
+    genre_action_by_rating: { genre: "Action", sort: "rating" },
+    tags_roguelike_pixel: { tags: "Roguelike,Pixel Graphics" },
+    best_of_2019: { year: "2019", sort: "rating" },
+    free_mac_popular: { free: "1", platforms: "mac", sort: "popular" },
+    japanese_full_audio: { language: "Japanese", fullAudio: "1" },
+    deep_page_100: { page: "100" }
+};
+
+async function suiteP1(games) {
+    const mod = IMPL === "before" ? require("./games_before") : require("../../routes/games");
+    const name = `mongo-${IMPL}`;
+    for (const [query, q] of Object.entries(P1_CASES)) {
+        await measure("P1", query, [{
+            name,
+            run: async () => (await mod.queryGames(games, q)).games.length,
+            explain: () => mod.explainGames(games, q)
+        }]);
+    }
+    await measure("P1", "filter_options", [{
+        name,
+        run: async () => { const f = await mod.queryFilters(games); return f.genres.length; },
+        explain: () => mod.explainFilters(games)
+    }]);
+}
+
+
+// ---------- P3: SQL vs NoSQL on the same game questions ----------
+
+// Wilson lower bound computed in the pipeline (raw data has no stored score)
+const WILSON = {
+    $let: {
+        vars: { p: { $ifNull: ["$positive", 0] }, n: { $ifNull: ["$negative", 0] } },
+        in: { $let: {
+            vars: { t: { $add: ["$$p", "$$n"] } },
+            in: { $cond: [{ $eq: ["$$t", 0] }, 0, { $divide: [
+                { $subtract: [{ $divide: [{ $add: ["$$p", 1.9208] }, "$$t"] },
+                    { $divide: [{ $multiply: [1.96, { $sqrt: { $add: [{ $divide: [{ $multiply: ["$$p", "$$n"] }, "$$t"] }, 0.9604] } }] }, "$$t"] }] },
+                { $add: [1, { $divide: [3.8416, "$$t"] }] }] }] }
+        } }
+    }
+};
+const RAW_DATE = { $cond: [{ $eq: [{ $type: "$release_date" }, "date"] }, "$release_date",
+    { $dateFromString: { dateString: "$release_date", onError: null, onNull: null } }] };
+const RAW_TAGS = { $cond: [{ $eq: [{ $type: "$tags" }, "object"] }, "$tags", {}] };
+
+const D2019 = [new Date(Date.UTC(2019, 0, 1)), new Date(Date.UTC(2020, 0, 1))];
+
+async function suiteP3(sql, games) {
+    const before = IMPL === "before";
+    const mysql = (q, params = []) => async () => (await sql.query(q, params))[0].length;
+    const sqlExplain = (q, params = []) => async () =>
+        (await sql.query(`EXPLAIN ANALYZE ${q}`, params))[0].map((r) => Object.values(r)[0]).join("\n");
+    const agg = (pipeline) => ({ run: async () => (await games.aggregate(pipeline).toArray()).length,
+        explain: () => games.aggregate(pipeline).explain("executionStats") });
+    const find = (filter, opts) => ({ run: async () => (await games.find(filter, opts).toArray()).length,
+        explain: () => games.find(filter, opts).explain("executionStats") });
+    const M = `mongo-${IMPL}`;
+
+    // Q1: games with ALL of two tags, best rated first
+    const q1 = `SELECT g.app_id, g.title FROM game g
+        JOIN (SELECT gt.game_id FROM game_tag gt JOIN tag t ON t.tag_id = gt.tag_id
+              WHERE t.name IN ('Roguelike', 'Pixel Graphics')
+              GROUP BY gt.game_id HAVING COUNT(DISTINCT gt.tag_id) = 2) m ON m.game_id = g.app_id
+        ORDER BY g.wilson_score DESC, g.app_id LIMIT 24`;
+    await measure("P3", "Q1_all_tags_best_rated", [
+        { name: "mysql", run: mysql(q1), explain: sqlExplain(q1) },
+        { name: M, ...(before
+            ? agg([{ $match: { "tags.Roguelike": { $exists: true }, "tags.Pixel Graphics": { $exists: true } } },
+                   { $addFields: { _w: WILSON } }, { $sort: { _w: -1, _id: 1 } }, { $limit: 24 }, { $project: { name: 1 } }])
+            : find({ tag_names: { $all: ["Roguelike", "Pixel Graphics"] } },
+                   { projection: { name: 1 }, sort: { wilson_score: -1, _id: 1 }, limit: 24 })) }
+    ]);
+
+    // Q2: best of 2019
+    const q2 = `SELECT app_id, title, wilson_score FROM game
+        WHERE release_date >= '2019-01-01' AND release_date < '2020-01-01'
+        ORDER BY wilson_score DESC, app_id LIMIT 50`;
+    await measure("P3", "Q2_best_of_2019", [
+        { name: "mysql", run: mysql(q2), explain: sqlExplain(q2) },
+        { name: M, ...(before
+            ? agg([{ $addFields: { _d: RAW_DATE } }, { $match: { _d: { $gte: D2019[0], $lt: D2019[1] } } },
+                   { $addFields: { _w: WILSON } }, { $sort: { _w: -1, _id: 1 } }, { $limit: 50 }, { $project: { name: 1, _w: 1 } }])
+            : find({ release_date: { $gte: D2019[0], $lt: D2019[1] } },
+                   { projection: { name: 1, wilson_score: 1 }, sort: { wilson_score: -1, _id: 1 }, limit: 50 })) }
+    ]);
+
+    // Q3: genre ranking (average score, genres with at least 50 games)
+    const q3 = `SELECT ge.name, COUNT(*) AS games, AVG(g.wilson_score) AS avg_score
+        FROM game g JOIN game_genre gg ON gg.game_id = g.app_id JOIN genre ge ON ge.genre_id = gg.genre_id
+        GROUP BY ge.genre_id, ge.name HAVING games >= 50 ORDER BY avg_score DESC`;
+    await measure("P3", "Q3_genre_ranking", [
+        { name: "mysql", run: mysql(q3), explain: sqlExplain(q3) },
+        { name: M, ...agg([{ $unwind: "$genres" },
+            { $group: { _id: "$genres", games: { $sum: 1 }, avgScore: { $avg: before ? WILSON : "$wilson_score" } } },
+            { $match: { games: { $gte: 50 } } }, { $sort: { avgScore: -1 } }]) }
+    ]);
+
+    // Q4: Japanese full audio, on macOS
+    const q4 = `SELECT g.app_id, g.title FROM game g
+        JOIN game_language gl ON gl.game_id = g.app_id AND gl.has_full_audio = TRUE
+        JOIN language l ON l.language_id = gl.language_id AND l.name = 'Japanese'
+        WHERE g.supports_mac = 1`;
+    await measure("P3", "Q4_japanese_audio_mac", [
+        { name: "mysql", run: mysql(q4), explain: sqlExplain(q4) },
+        { name: M, ...find({ full_audio_languages: "Japanese", mac: true }, { projection: { name: 1 } }) }
+    ]);
+
+    // Q5: top 20 tags among free games
+    const q5 = `SELECT t.name, COUNT(*) AS games FROM game g
+        JOIN game_tag gt ON gt.game_id = g.app_id JOIN tag t ON t.tag_id = gt.tag_id
+        WHERE g.price = 0 GROUP BY t.tag_id, t.name ORDER BY games DESC, t.name LIMIT 20`;
+    await measure("P3", "Q5_top_tags_free_games", [
+        { name: "mysql", run: mysql(q5), explain: sqlExplain(q5) },
+        { name: M, ...agg(before
+            ? [{ $match: { price: 0 } }, { $project: { t: { $objectToArray: RAW_TAGS } } }, { $unwind: "$t" },
+               { $group: { _id: "$t.k", games: { $sum: 1 } } }, { $sort: { games: -1, _id: 1 } }, { $limit: 20 }]
+            : [{ $match: { price: 0 } }, { $unwind: "$tag_names" },
+               { $group: { _id: "$tag_names", games: { $sum: 1 } } }, { $sort: { games: -1, _id: 1 } }, { $limit: 20 }]) }
+    ]);
+
+    // Q6: full game detail page, rotating through 50 games (a 7-table join vs one document)
+    const [idRows] = await sql.query(`SELECT app_id FROM game ORDER BY recommendations DESC, app_id LIMIT 50`);
+    const ids = idRows.map((r) => r.app_id);
+    const q6 = `SELECT g.*,
+        (SELECT GROUP_CONCAT(ge.name) FROM game_genre gg JOIN genre ge ON ge.genre_id = gg.genre_id WHERE gg.game_id = g.app_id) AS genres,
+        (SELECT GROUP_CONCAT(c.name) FROM game_category gc JOIN category c ON c.category_id = gc.category_id WHERE gc.game_id = g.app_id) AS categories,
+        (SELECT GROUP_CONCAT(t.name ORDER BY gt.votes DESC) FROM game_tag gt JOIN tag t ON t.tag_id = gt.tag_id WHERE gt.game_id = g.app_id) AS tags,
+        (SELECT GROUP_CONCAT(l.name) FROM game_language gl JOIN language l ON l.language_id = gl.language_id WHERE gl.game_id = g.app_id) AS languages,
+        (SELECT GROUP_CONCAT(d.name) FROM game_developer gd JOIN developer d ON d.developer_id = gd.developer_id WHERE gd.game_id = g.app_id) AS developers,
+        (SELECT GROUP_CONCAT(p.name) FROM game_publisher gp JOIN publisher p ON p.publisher_id = gp.publisher_id WHERE gp.game_id = g.app_id) AS publishers
+        FROM game g WHERE g.app_id = ?`;
+    await measure("P3", "Q6_full_game_page", [
+        { name: "mysql", run: async (i) => (await sql.query(q6, [ids[i % ids.length]]))[0].length, explain: sqlExplain(q6, [ids[0]]) },
+        { name: M, run: async (i) => ((await games.findOne({ _id: String(ids[i % ids.length]) })) ? 1 : 0),
+          explain: () => games.find({ _id: String(ids[0]) }).limit(1).explain("executionStats") }
+    ]);
+
+    // Q7: retrieve N records (the instructor's same-number-of-records test)
+    for (const n of [1000, 10000]) {
+        const q7 = `SELECT app_id, title, price FROM game ORDER BY app_id LIMIT ${n}`;
+        await measure("P3", `Q7_fetch_${n}_records`, [
+            { name: "mysql", run: mysql(q7), explain: sqlExplain(q7) },
+            { name: M, ...find({}, { projection: { name: 1, price: 1 }, sort: { _id: 1 }, limit: n }) }
+        ]);
+    }
+}
+
+
+// ---------- P6: collections, three designs on identical data ----------
+
+async function suiteP6(sql, db) {
+    const emb = db.collection("bench_collections_embedded");
+    const ref = db.collection("bench_collections_ref");
+    const items = db.collection("bench_collection_items");
+    const cardLookup = (localField) => ({ $lookup: { from: "games", localField, foreignField: "_id",
+        pipeline: [{ $project: { name: 1, header_image: 1, price: 1 } }], as: "g" } });
+
+    // Test values, the same for every design: 50 collections, 50 users, 50 games
+    const [[{ maxId }]] = await sql.query("SELECT MAX(collection_id) AS maxId FROM collection");
+    const cids = Array.from({ length: 50 }, (_, i) => 1 + Math.floor((i * (maxId - 1)) / 49));
+    const [uRows] = await sql.query("SELECT DISTINCT user_id FROM collection ORDER BY user_id LIMIT 50");
+    const uids = uRows.map((r) => r.user_id);
+    const [gRows] = await sql.query("SELECT game_id FROM collection_game GROUP BY game_id ORDER BY COUNT(*) DESC, game_id LIMIT 50");
+    const gids = gRows.map((r) => r.game_id);
+    const pick = (arr, i) => arr[i % arr.length];
+
+    const sqlRun = (q, params) => async (i) => (await sql.query(q, params(i)))[0].length;
+    const sqlExplain = (q, params) => async () =>
+        (await sql.query(`EXPLAIN ANALYZE ${q}`, params(0)))[0].map((r) => Object.values(r)[0]).join("\n");
+    const aggOn = (coll, pipe) => ({ run: async (i) => (await coll.aggregate(pipe(i)).toArray()).length,
+        explain: () => coll.aggregate(pipe(0)).explain("executionStats") });
+
+    // C1: open one collection with game titles, in order
+    const c1 = `SELECT cg.position, g.app_id, g.title, g.header_image, g.price
+        FROM collection_game cg JOIN game g ON g.app_id = cg.game_id
+        WHERE cg.collection_id = ? ORDER BY cg.position`;
+    await measure("P6", "C1_open_collection", [
+        { name: "mysql", run: sqlRun(c1, (i) => [pick(cids, i)]), explain: sqlExplain(c1, (i) => [pick(cids, i)]) },
+        { name: "mongo-embedded", ...aggOn(emb, (i) => [{ $match: { _id: pick(cids, i) } }, cardLookup("games.app_id")]) ,
+          run: async (i) => { const [d] = await emb.aggregate([{ $match: { _id: pick(cids, i) } }, cardLookup("games.app_id")]).toArray(); return d ? d.g.length : 0; } },
+        { name: "mongo-referenced", ...aggOn(items, (i) => [{ $match: { collection_id: pick(cids, i) } }, { $sort: { position: 1 } }, cardLookup("app_id")]) }
+    ]);
+
+    // C2: list a user's collections with game counts
+    const c2 = `SELECT c.collection_id, c.name, COUNT(cg.game_id) AS games
+        FROM collection c LEFT JOIN collection_game cg ON cg.collection_id = c.collection_id
+        WHERE c.user_id = ? GROUP BY c.collection_id, c.name`;
+    await measure("P6", "C2_list_user_collections", [
+        { name: "mysql", run: sqlRun(c2, (i) => [pick(uids, i)]), explain: sqlExplain(c2, (i) => [pick(uids, i)]) },
+        { name: "mongo-embedded", ...aggOn(emb, (i) => [{ $match: { user_id: pick(uids, i) } }, { $project: { name: 1, games: { $size: "$games" } } }]) },
+        { name: "mongo-referenced", ...aggOn(ref, (i) => [{ $match: { user_id: pick(uids, i) } },
+            { $lookup: { from: "bench_collection_items", localField: "_id", foreignField: "collection_id", pipeline: [{ $count: "n" }], as: "c" } }]) }
+    ]);
+
+    // C3: how many collections contain game X
+    const c3 = "SELECT COUNT(*) AS n FROM collection_game WHERE game_id = ?";
+    await measure("P6", "C3_collections_containing_game", [
+        { name: "mysql", run: async (i) => (await sql.query(c3, [pick(gids, i)]))[0][0].n, explain: sqlExplain(c3, (i) => [pick(gids, i)]) },
+        { name: "mongo-embedded", run: async (i) => emb.countDocuments({ "games.app_id": String(pick(gids, i)) }),
+          explain: () => emb.find({ "games.app_id": String(gids[0]) }).explain("executionStats") },
+        { name: "mongo-referenced", run: async (i) => items.countDocuments({ app_id: String(pick(gids, i)) }),
+          explain: () => items.find({ app_id: String(gids[0]) }).explain("executionStats") }
+    ]);
+
+    // C4: top 10 most-collected games with titles (whole-dataset aggregate)
+    const c4 = `SELECT g.app_id, g.title, COUNT(*) AS n
+        FROM collection_game cg JOIN game g ON g.app_id = cg.game_id
+        GROUP BY g.app_id, g.title ORDER BY n DESC, g.app_id LIMIT 10`;
+    const top = (unwind, key) => [...unwind, { $group: { _id: key, n: { $sum: 1 } } }, { $sort: { n: -1, _id: 1 } },
+        { $limit: 10 }, cardLookup("_id")];
+    await measure("P6", "C4_most_collected_games", [
+        { name: "mysql", run: sqlRun(c4, () => []), explain: sqlExplain(c4, () => []) },
+        { name: "mongo-embedded", ...aggOn(emb, () => top([{ $unwind: "$games" }], "$games.app_id")) },
+        { name: "mongo-referenced", ...aggOn(items, () => top([], "$app_id")) }
+    ]);
+}
+
+
+// ---------- Main ----------
+
+function writeResults(meta) {
+    fs.mkdirSync(OUT_DIR, { recursive: true });
+    const base = `${LABEL}_${SUITE}_${STAMP}`;
+    fs.writeFileSync(path.join(OUT_DIR, `${base}.json`), JSON.stringify({ meta, results }, null, 2));
+
+    const cols = ["date", "label", "experiment", "query", "impl", "runs", "median_ms", "p95_ms", "mean_ms",
+        "min_ms", "max_ms", "rows", "docsExamined", "keysExamined", "plan"];
+    const csv = path.join(OUT_DIR, "summary.csv");
+    const esc = (v) => (v === undefined || v === null ? "" : /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v));
+    if (!fs.existsSync(csv)) fs.writeFileSync(csv, cols.join(",") + "\n");
+    fs.appendFileSync(csv, results.map((r) => cols.map((c) => esc(r[c])).join(",")).join("\n") + "\n");
+    return base;
+}
+
+async function main() {
+    await connectMongo();
+    const db = getMongoDB();
+    const games = db.collection("games");
+
+    let sql = null;
+    if (SUITE !== "p1") {
+        sql = await mysqlLib.createConnection({
+            host: process.env.MYSQL_HOST, port: Number(process.env.MYSQL_PORT) || 3306,
+            user: process.env.BENCH_MYSQL_USER || "root", password: process.env.BENCH_MYSQL_PASSWORD,
+            database: "steamdb_bench"
+        });
+    }
+
+    const meta = {
+        label: LABEL, suite: SUITE, impl: IMPL, runs: RUNS, warmup: WARMUP, started: new Date().toISOString(),
+        node: process.version, cpus: os.cpus().length, memGB: +(os.totalmem() / 1073741824).toFixed(1),
+        mongo: (await db.admin().serverInfo()).version,
+        mysql: sql ? (await sql.query("SELECT VERSION() AS v"))[0][0].v : null,
+        games: await games.estimatedDocumentCount()
+    };
+    console.log(`Benchmark "${LABEL}" (${IMPL}), ${RUNS} runs + ${WARMUP} warm-up, MongoDB ${meta.mongo}${sql ? `, MySQL ${meta.mysql}` : ""}`);
+
+    if (SUITE === "p1" || SUITE === "all") await suiteP1(games);
+    if (SUITE === "p3" || SUITE === "all") await suiteP3(sql, games);
+    if (SUITE === "p6" || SUITE === "all") await suiteP6(sql, db);
+    for (const s of ["p2", "p4", "p5"]) if (SUITE === s) await require(`./suite_${s}`)({ sql, db, games, measure });
+
+    const base = writeResults(meta);
+    console.table(results.map((r) => ({ exp: r.experiment, query: r.query, impl: r.impl, median_ms: r.median_ms,
+        p95_ms: r.p95_ms, rows: r.rows, docs: r.docsExamined, plan: String(r.plan).slice(0, 40) })));
+    console.log(`Saved bench/results/${base}.json, appended to bench/results/summary.csv, explains in bench/results/explain/${LABEL}/`);
+    if (sql) await sql.end();
+}
+
+main()
+    .catch((err) => { console.error("Benchmark failed:", err); process.exitCode = 1; })
+    .finally(() => process.exit());

@@ -1,0 +1,235 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "steamdb.games",
+    "parsedQuery": {
+      "name_lower": {
+        "$regex": "portal"
+      }
+    },
+    "indexFilterSet": false,
+    "queryHash": "19B9D26D",
+    "planCacheShapeHash": "19B9D26D",
+    "planCacheKey": "F1B21E7A",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "LIMIT",
+      "limitAmount": 24,
+      "inputStage": {
+        "stage": "PROJECTION_SIMPLE",
+        "transformBy": {
+          "name": 1,
+          "price": 1,
+          "header_image": 1,
+          "release_date": 1,
+          "required_age": 1,
+          "positive": 1,
+          "negative": 1,
+          "peak_ccu": 1,
+          "windows": 1,
+          "mac": 1,
+          "linux": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "nss": "steamdb.games",
+          "inputStage": {
+            "stage": "IXSCAN",
+            "filter": {
+              "name_lower": {
+                "$regex": "portal"
+              }
+            },
+            "nss": "steamdb.games",
+            "keyPattern": {
+              "name_lower": 1,
+              "_id": 1
+            },
+            "indexName": "idx_name",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "name_lower": [],
+              "_id": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "name_lower": [
+                "[\"\", {})",
+                "[/portal/, /portal/]"
+              ],
+              "_id": [
+                "[MinKey, MaxKey]"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 24,
+    "executionTimeMillis": 86,
+    "totalKeysExamined": 40400,
+    "totalDocsExamined": 24,
+    "executionStages": {
+      "isCached": false,
+      "stage": "LIMIT",
+      "nReturned": 24,
+      "executionTimeMillisEstimate": 78,
+      "works": 40401,
+      "advanced": 24,
+      "needTime": 40376,
+      "needYield": 0,
+      "saveState": 4,
+      "restoreState": 4,
+      "isEOF": 1,
+      "limitAmount": 24,
+      "inputStage": {
+        "stage": "PROJECTION_SIMPLE",
+        "nReturned": 24,
+        "executionTimeMillisEstimate": 70,
+        "works": 40400,
+        "advanced": 24,
+        "needTime": 40376,
+        "needYield": 0,
+        "saveState": 4,
+        "restoreState": 4,
+        "isEOF": 0,
+        "transformBy": {
+          "name": 1,
+          "price": 1,
+          "header_image": 1,
+          "release_date": 1,
+          "required_age": 1,
+          "positive": 1,
+          "negative": 1,
+          "peak_ccu": 1,
+          "windows": 1,
+          "mac": 1,
+          "linux": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "nReturned": 24,
+          "executionTimeMillisEstimate": 70,
+          "works": 40400,
+          "advanced": 24,
+          "needTime": 40376,
+          "needYield": 0,
+          "saveState": 4,
+          "restoreState": 4,
+          "isEOF": 0,
+          "nss": "steamdb.games",
+          "docsExamined": 24,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "filter": {
+              "name_lower": {
+                "$regex": "portal"
+              }
+            },
+            "nReturned": 24,
+            "executionTimeMillisEstimate": 70,
+            "works": 40400,
+            "advanced": 24,
+            "needTime": 40376,
+            "needYield": 0,
+            "saveState": 4,
+            "restoreState": 4,
+            "isEOF": 0,
+            "nss": "steamdb.games",
+            "keyPattern": {
+              "name_lower": 1,
+              "_id": 1
+            },
+            "indexName": "idx_name",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "name_lower": [],
+              "_id": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "name_lower": [
+                "[\"\", {})",
+                "[/portal/, /portal/]"
+              ],
+              "_id": [
+                "[MinKey, MaxKey]"
+              ]
+            },
+            "keysExamined": 40400,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0,
+            "peakTrackedMemBytes": 0
+          }
+        }
+      }
+    }
+  },
+  "queryShapeHash": "35FC2D21FDA0C3957F673E247B8B2AF5A038966CE88653ACBFCD2257A7123DFE",
+  "command": {
+    "find": "games",
+    "filter": {
+      "name_lower": {
+        "$regex": "portal"
+      }
+    },
+    "sort": {
+      "name_lower": 1,
+      "_id": 1
+    },
+    "projection": {
+      "name": 1,
+      "price": 1,
+      "header_image": 1,
+      "release_date": 1,
+      "required_age": 1,
+      "positive": 1,
+      "negative": 1,
+      "peak_ccu": 1,
+      "windows": 1,
+      "mac": 1,
+      "linux": 1
+    },
+    "skip": 0,
+    "limit": 24,
+    "$db": "steamdb"
+  },
+  "serverInfo": {
+    "host": "b508008a5194",
+    "port": 27017,
+    "version": "8.3.11",
+    "gitVersion": "b8b83d6e6e1aed495578ad8c6f9234ad329c9955"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1
+}

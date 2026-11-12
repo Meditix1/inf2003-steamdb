@@ -1,0 +1,4 @@
+-> Nested loop inner join  (cost=516 rows=127) (actual time=0.16..4.11 rows=358 loops=1)
+    -> Covering index lookup on gg using genre_id (genre_id='10')  (cost=115 rows=1146) (actual time=0.0752..0.324 rows=1146 loops=1)
+    -> Filter: ((g.price > 0.00) and (g.price < '8.735458'))  (cost=0.25 rows=0.111) (actual time=0.00313..0.00316 rows=0.312 loops=1146)
+        -> Single-row index lookup on g using PRIMARY (app_id=gg.game_id)  (cost=0.25 rows=1) (actual time=0.00276..0.0028 rows=1 loops=1146)

@@ -1,0 +1,193 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "steamdb.bench_collections_ref",
+          "parsedQuery": {
+            "user_id": {
+              "$eq": 2
+            }
+          },
+          "indexFilterSet": false,
+          "queryHash": "727AD357",
+          "planCacheShapeHash": "727AD357",
+          "planCacheKey": "814D7546",
+          "optimizationTimeMillis": 0,
+          "cursorType": "regular",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "FETCH",
+            "nss": "steamdb.bench_collections_ref",
+            "inputStage": {
+              "stage": "IXSCAN",
+              "nss": "steamdb.bench_collections_ref",
+              "keyPattern": {
+                "user_id": 1,
+                "name": 1
+              },
+              "indexName": "uq_user_name",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "user_id": [],
+                "name": []
+              },
+              "isUnique": true,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "user_id": [
+                  "[2, 2]"
+                ],
+                "name": [
+                  "[MinKey, MaxKey]"
+                ]
+              }
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 2,
+          "executionTimeMillis": 3,
+          "totalKeysExamined": 2,
+          "totalDocsExamined": 2,
+          "executionStages": {
+            "isCached": false,
+            "stage": "FETCH",
+            "nReturned": 2,
+            "executionTimeMillisEstimate": 0,
+            "works": 3,
+            "advanced": 2,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 2,
+            "restoreState": 1,
+            "isEOF": 1,
+            "nss": "steamdb.bench_collections_ref",
+            "docsExamined": 2,
+            "alreadyHasObj": 0,
+            "inputStage": {
+              "stage": "IXSCAN",
+              "nReturned": 2,
+              "executionTimeMillisEstimate": 0,
+              "works": 3,
+              "advanced": 2,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 2,
+              "restoreState": 1,
+              "isEOF": 1,
+              "nss": "steamdb.bench_collections_ref",
+              "keyPattern": {
+                "user_id": 1,
+                "name": 1
+              },
+              "indexName": "uq_user_name",
+              "isMultiKey": false,
+              "multiKeyPaths": {
+                "user_id": [],
+                "name": []
+              },
+              "isUnique": true,
+              "isSparse": false,
+              "isPartial": false,
+              "indexVersion": 2,
+              "direction": "forward",
+              "indexBounds": {
+                "user_id": [
+                  "[2, 2]"
+                ],
+                "name": [
+                  "[MinKey, MaxKey]"
+                ]
+              },
+              "keysExamined": 2,
+              "seeks": 1,
+              "dupsTested": 0,
+              "dupsDropped": 0,
+              "peakTrackedMemBytes": 0
+            }
+          }
+        }
+      },
+      "nReturned": 2,
+      "executionTimeMillisEstimate": 0
+    },
+    {
+      "$lookup": {
+        "from": "bench_collection_items",
+        "as": "c",
+        "localField": "_id",
+        "foreignField": "collection_id",
+        "let": {},
+        "pipeline": [
+          {
+            "$count": "n"
+          }
+        ]
+      },
+      "nReturned": 2,
+      "executionTimeMillisEstimate": 3,
+      "totalDocsExamined": 0,
+      "totalKeysExamined": 44,
+      "collectionScans": 0,
+      "indexesUsed": [
+        "pk_collection_game"
+      ]
+    }
+  ],
+  "queryShapeHash": "5B64C68FE2CC8AA3974F2213B48E87E14E85C7FF9F589774CD1779586FCBC57E",
+  "serverInfo": {
+    "host": "b508008a5194",
+    "port": 27017,
+    "version": "8.3.11",
+    "gitVersion": "b8b83d6e6e1aed495578ad8c6f9234ad329c9955"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "bench_collections_ref",
+    "pipeline": [
+      {
+        "$match": {
+          "user_id": 2
+        }
+      },
+      {
+        "$lookup": {
+          "from": "bench_collection_items",
+          "localField": "_id",
+          "foreignField": "collection_id",
+          "pipeline": [
+            {
+              "$count": "n"
+            }
+          ],
+          "as": "c"
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "steamdb"
+  },
+  "ok": 1
+}

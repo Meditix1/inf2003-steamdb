@@ -1,0 +1,2 @@
+-> Limit: 10000 row(s)  (cost=243 rows=10000) (actual time=0.0778..10.2 rows=10000 loops=1)
+    -> Index scan on game using PRIMARY  (cost=243 rows=10000) (actual time=0.076..8.86 rows=10000 loops=1)

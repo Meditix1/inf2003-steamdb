@@ -1,0 +1,2 @@
+-> Aggregate: count(0)  (cost=116 rows=1) (actual time=0.482..0.482 rows=1 loops=1)
+    -> Covering index lookup on collection_game using idx_cg_game (game_id=105600)  (cost=58.5 rows=580) (actual time=0.133..0.433 rows=580 loops=1)

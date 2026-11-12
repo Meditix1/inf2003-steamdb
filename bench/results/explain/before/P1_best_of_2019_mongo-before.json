@@ -1,0 +1,804 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "steamdb.games",
+          "parsedQuery": {},
+          "collation": {
+            "locale": "en",
+            "caseLevel": false,
+            "caseFirst": "off",
+            "strength": 2,
+            "numericOrdering": false,
+            "alternate": "non-ignorable",
+            "maxVariable": "punct",
+            "normalization": false,
+            "backwards": false,
+            "version": "57.1"
+          },
+          "indexFilterSet": false,
+          "queryHash": "8FC142BE",
+          "planCacheShapeHash": "8FC142BE",
+          "planCacheKey": "1370C553",
+          "optimizationTimeMillis": 0,
+          "cursorType": "regular",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "PROJECTION_DEFAULT",
+            "transformBy": {
+              "_id": true,
+              "name": true,
+              "price": true,
+              "header_image": true,
+              "required_age": true,
+              "positive": true,
+              "negative": true,
+              "peak_ccu": true,
+              "windows": true,
+              "mac": true,
+              "linux": true,
+              "_releaseDate": {
+                "$cond": [
+                  {
+                    "$eq": [
+                      {
+                        "$type": [
+                          "$release_date"
+                        ]
+                      },
+                      {
+                        "$const": "date"
+                      }
+                    ]
+                  },
+                  "$release_date",
+                  {
+                    "$dateFromString": {
+                      "dateString": "$release_date",
+                      "onNull": {
+                        "$const": null
+                      },
+                      "onError": {
+                        "$const": null
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "nss": "steamdb.games",
+              "direction": "forward"
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 50000,
+          "executionTimeMillis": 3272,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 50000,
+          "executionStages": {
+            "isCached": false,
+            "stage": "PROJECTION_DEFAULT",
+            "nReturned": 50000,
+            "executionTimeMillisEstimate": 2832,
+            "works": 50001,
+            "advanced": 50000,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 73,
+            "restoreState": 72,
+            "isEOF": 1,
+            "transformBy": {
+              "_id": true,
+              "name": true,
+              "price": true,
+              "header_image": true,
+              "required_age": true,
+              "positive": true,
+              "negative": true,
+              "peak_ccu": true,
+              "windows": true,
+              "mac": true,
+              "linux": true,
+              "_releaseDate": {
+                "$cond": [
+                  {
+                    "$eq": [
+                      {
+                        "$type": [
+                          "$release_date"
+                        ]
+                      },
+                      {
+                        "$const": "date"
+                      }
+                    ]
+                  },
+                  "$release_date",
+                  {
+                    "$dateFromString": {
+                      "dateString": "$release_date",
+                      "onNull": {
+                        "$const": null
+                      },
+                      "onError": {
+                        "$const": null
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "nReturned": 50000,
+              "executionTimeMillisEstimate": 864,
+              "works": 50001,
+              "advanced": 50000,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 73,
+              "restoreState": 72,
+              "isEOF": 1,
+              "nss": "steamdb.games",
+              "direction": "forward",
+              "docsExamined": 50000
+            }
+          }
+        }
+      },
+      "nReturned": 50000,
+      "executionTimeMillisEstimate": 2950
+    },
+    {
+      "$match": {
+        "$and": [
+          {
+            "_releaseDate": {
+              "$gte": "2019-01-01T00:00:00.000Z"
+            }
+          },
+          {
+            "_releaseDate": {
+              "$lt": "2020-01-01T00:00:00.000Z"
+            }
+          }
+        ]
+      },
+      "nReturned": 3207,
+      "executionTimeMillisEstimate": 3249
+    },
+    {
+      "$facet": {
+        "metadata": [
+          {
+            "$internalFacetTeeConsumer": {},
+            "nReturned": 3207,
+            "executionTimeMillisEstimate": 3249
+          },
+          {
+            "$group": {
+              "_id": {
+                "$const": null
+              },
+              "total": {
+                "$sum": {
+                  "$const": 1
+                }
+              },
+              "$willBeMerged": false
+            },
+            "nReturned": 1,
+            "executionTimeMillisEstimate": 3249,
+            "maxAccumulatorMemoryUsageBytes": {
+              "total": 192
+            },
+            "totalOutputDataSizeBytes": 237,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledDataStorageSize": 0,
+            "spilledBytes": 0,
+            "spilledRecords": 0,
+            "peakTrackedMemBytes": 208
+          },
+          {
+            "$project": {
+              "total": true,
+              "_id": false
+            },
+            "nReturned": 1,
+            "executionTimeMillisEstimate": 3249
+          }
+        ],
+        "games": [
+          {
+            "$internalFacetTeeConsumer": {},
+            "nReturned": 3207,
+            "executionTimeMillisEstimate": 10
+          },
+          {
+            "$addFields": {
+              "_appId": {
+                "$convert": {
+                  "input": "$_id",
+                  "to": {
+                    "$const": "int"
+                  },
+                  "onError": {
+                    "$const": null
+                  },
+                  "onNull": {
+                    "$const": null
+                  }
+                }
+              },
+              "_rating": {
+                "$let": {
+                  "vars": {
+                    "p": {
+                      "$ifNull": [
+                        "$positive",
+                        {
+                          "$const": 0
+                        }
+                      ]
+                    },
+                    "n": {
+                      "$ifNull": [
+                        "$negative",
+                        {
+                          "$const": 0
+                        }
+                      ]
+                    }
+                  },
+                  "in": {
+                    "$let": {
+                      "vars": {
+                        "total": {
+                          "$add": [
+                            "$$p",
+                            "$$n"
+                          ]
+                        }
+                      },
+                      "in": {
+                        "$cond": [
+                          {
+                            "$eq": [
+                              "$$total",
+                              {
+                                "$const": 0
+                              }
+                            ]
+                          },
+                          {
+                            "$const": 0
+                          },
+                          {
+                            "$divide": [
+                              {
+                                "$subtract": [
+                                  {
+                                    "$divide": [
+                                      {
+                                        "$add": [
+                                          "$$p",
+                                          {
+                                            "$const": 1.9208
+                                          }
+                                        ]
+                                      },
+                                      "$$total"
+                                    ]
+                                  },
+                                  {
+                                    "$divide": [
+                                      {
+                                        "$multiply": [
+                                          {
+                                            "$const": 1.96
+                                          },
+                                          {
+                                            "$sqrt": [
+                                              {
+                                                "$add": [
+                                                  {
+                                                    "$divide": [
+                                                      {
+                                                        "$multiply": [
+                                                          "$$p",
+                                                          "$$n"
+                                                        ]
+                                                      },
+                                                      "$$total"
+                                                    ]
+                                                  },
+                                                  {
+                                                    "$const": 0.9604
+                                                  }
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      "$$total"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "$add": [
+                                  {
+                                    "$const": 1
+                                  },
+                                  {
+                                    "$divide": [
+                                      {
+                                        "$const": 3.8416
+                                      },
+                                      "$$total"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "nReturned": 3207,
+            "executionTimeMillisEstimate": 10
+          },
+          {
+            "$sort": {
+              "sortKey": {
+                "_rating": -1,
+                "_appId": 1
+              },
+              "limit": 24
+            },
+            "totalDataSizeSortedBytesEstimate": 32999,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledBytes": 0,
+            "spilledRecords": 0,
+            "spilledDataStorageSize": 0,
+            "nReturned": 24,
+            "executionTimeMillisEstimate": 20,
+            "peakTrackedMemBytes": 33179
+          },
+          {
+            "$project": {
+              "name": true,
+              "header_image": true,
+              "app_id": "$_appId",
+              "price": {
+                "$ifNull": [
+                  "$price",
+                  {
+                    "$const": 0
+                  }
+                ]
+              },
+              "is_free": {
+                "$cond": [
+                  {
+                    "$eq": [
+                      {
+                        "$ifNull": [
+                          "$price",
+                          {
+                            "$const": 0
+                          }
+                        ]
+                      },
+                      {
+                        "$const": 0
+                      }
+                    ]
+                  },
+                  {
+                    "$const": 1
+                  },
+                  {
+                    "$const": 0
+                  }
+                ]
+              },
+              "release_date": {
+                "$dateToString": {
+                  "date": "$_releaseDate",
+                  "format": {
+                    "$const": "%Y-%m-%d"
+                  },
+                  "onNull": {
+                    "$const": null
+                  }
+                }
+              },
+              "required_age": {
+                "$ifNull": [
+                  "$required_age",
+                  {
+                    "$const": 0
+                  }
+                ]
+              },
+              "positive": {
+                "$ifNull": [
+                  "$positive",
+                  {
+                    "$const": 0
+                  }
+                ]
+              },
+              "negative": {
+                "$ifNull": [
+                  "$negative",
+                  {
+                    "$const": 0
+                  }
+                ]
+              },
+              "peak_ccu": {
+                "$ifNull": [
+                  "$peak_ccu",
+                  {
+                    "$const": 0
+                  }
+                ]
+              },
+              "supports_windows": {
+                "$cond": [
+                  "$windows",
+                  {
+                    "$const": 1
+                  },
+                  {
+                    "$const": 0
+                  }
+                ]
+              },
+              "supports_mac": {
+                "$cond": [
+                  "$mac",
+                  {
+                    "$const": 1
+                  },
+                  {
+                    "$const": 0
+                  }
+                ]
+              },
+              "supports_linux": {
+                "$cond": [
+                  "$linux",
+                  {
+                    "$const": 1
+                  },
+                  {
+                    "$const": 0
+                  }
+                ]
+              },
+              "_id": false
+            },
+            "nReturned": 24,
+            "executionTimeMillisEstimate": 20
+          }
+        ]
+      },
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 3269
+    }
+  ],
+  "queryShapeHash": "BF945694A82950E6A7FA595282D4B5C0B0B549AC2B4E6C12DAD560BFC2E986E0",
+  "serverInfo": {
+    "host": "b508008a5194",
+    "port": 27017,
+    "version": "8.3.11",
+    "gitVersion": "b8b83d6e6e1aed495578ad8c6f9234ad329c9955"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "games",
+    "pipeline": [
+      {
+        "$match": {}
+      },
+      {
+        "$project": {
+          "name": 1,
+          "price": 1,
+          "header_image": 1,
+          "required_age": 1,
+          "positive": 1,
+          "negative": 1,
+          "peak_ccu": 1,
+          "windows": 1,
+          "mac": 1,
+          "linux": 1,
+          "_releaseDate": {
+            "$cond": [
+              {
+                "$eq": [
+                  {
+                    "$type": "$release_date"
+                  },
+                  "date"
+                ]
+              },
+              "$release_date",
+              {
+                "$dateFromString": {
+                  "dateString": "$release_date",
+                  "onError": null,
+                  "onNull": null
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "$match": {
+          "_releaseDate": {
+            "$gte": "2019-01-01T00:00:00.000Z",
+            "$lt": "2020-01-01T00:00:00.000Z"
+          }
+        }
+      },
+      {
+        "$facet": {
+          "metadata": [
+            {
+              "$count": "total"
+            }
+          ],
+          "games": [
+            {
+              "$addFields": {
+                "_appId": {
+                  "$convert": {
+                    "input": "$_id",
+                    "to": "int",
+                    "onError": null,
+                    "onNull": null
+                  }
+                },
+                "_rating": {
+                  "$let": {
+                    "vars": {
+                      "p": {
+                        "$ifNull": [
+                          "$positive",
+                          0
+                        ]
+                      },
+                      "n": {
+                        "$ifNull": [
+                          "$negative",
+                          0
+                        ]
+                      }
+                    },
+                    "in": {
+                      "$let": {
+                        "vars": {
+                          "total": {
+                            "$add": [
+                              "$$p",
+                              "$$n"
+                            ]
+                          }
+                        },
+                        "in": {
+                          "$cond": [
+                            {
+                              "$eq": [
+                                "$$total",
+                                0
+                              ]
+                            },
+                            0,
+                            {
+                              "$divide": [
+                                {
+                                  "$subtract": [
+                                    {
+                                      "$divide": [
+                                        {
+                                          "$add": [
+                                            "$$p",
+                                            1.9208
+                                          ]
+                                        },
+                                        "$$total"
+                                      ]
+                                    },
+                                    {
+                                      "$divide": [
+                                        {
+                                          "$multiply": [
+                                            1.96,
+                                            {
+                                              "$sqrt": {
+                                                "$add": [
+                                                  {
+                                                    "$divide": [
+                                                      {
+                                                        "$multiply": [
+                                                          "$$p",
+                                                          "$$n"
+                                                        ]
+                                                      },
+                                                      "$$total"
+                                                    ]
+                                                  },
+                                                  0.9604
+                                                ]
+                                              }
+                                            }
+                                          ]
+                                        },
+                                        "$$total"
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "$add": [
+                                    1,
+                                    {
+                                      "$divide": [
+                                        3.8416,
+                                        "$$total"
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "$sort": {
+                "_rating": -1,
+                "_appId": 1
+              }
+            },
+            {
+              "$skip": 0
+            },
+            {
+              "$limit": 24
+            },
+            {
+              "$project": {
+                "_id": 0,
+                "app_id": "$_appId",
+                "name": 1,
+                "price": {
+                  "$ifNull": [
+                    "$price",
+                    0
+                  ]
+                },
+                "is_free": {
+                  "$cond": [
+                    {
+                      "$eq": [
+                        {
+                          "$ifNull": [
+                            "$price",
+                            0
+                          ]
+                        },
+                        0
+                      ]
+                    },
+                    1,
+                    0
+                  ]
+                },
+                "header_image": 1,
+                "release_date": {
+                  "$dateToString": {
+                    "date": "$_releaseDate",
+                    "format": "%Y-%m-%d",
+                    "onNull": null
+                  }
+                },
+                "required_age": {
+                  "$ifNull": [
+                    "$required_age",
+                    0
+                  ]
+                },
+                "positive": {
+                  "$ifNull": [
+                    "$positive",
+                    0
+                  ]
+                },
+                "negative": {
+                  "$ifNull": [
+                    "$negative",
+                    0
+                  ]
+                },
+                "peak_ccu": {
+                  "$ifNull": [
+                    "$peak_ccu",
+                    0
+                  ]
+                },
+                "supports_windows": {
+                  "$cond": [
+                    "$windows",
+                    1,
+                    0
+                  ]
+                },
+                "supports_mac": {
+                  "$cond": [
+                    "$mac",
+                    1,
+                    0
+                  ]
+                },
+                "supports_linux": {
+                  "$cond": [
+                    "$linux",
+                    1,
+                    0
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "cursor": {},
+    "collation": {
+      "locale": "en",
+      "strength": 2
+    },
+    "$db": "steamdb"
+  },
+  "ok": 1
+}

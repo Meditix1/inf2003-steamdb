@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My games · SteamDB</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <a href="/" class="logo">SteamDB</a>
+
+        <form id="searchForm" class="search-container">
+            <input id="searchInput" type="search" placeholder="Search games..." autocomplete="off">
+            <button type="submit">Search</button>
+        </form>
+
+        <nav id="accountNav"></nav>
+    </header>
+
+    <main class="page">
+
+        <section id="profileHeader" class="profile-header"></section>
+
+        <nav class="tabs" aria-label="My games">
+            <a href="#library" data-tab="library">Library <span class="tab-count" id="count-library"></span></a>
+            <a href="#wishlist" data-tab="wishlist">Wishlist <span class="tab-count" id="count-wishlist"></span></a>
+            <a href="#collections" data-tab="collections">Collections <span class="tab-count" id="count-collections"></span></a>
+            <a href="#reviews" data-tab="reviews">Reviews <span class="tab-count" id="count-reviews"></span></a>
+        </nav>
+
+        <div class="toolbar" id="toolbar"></div>
+
+        <section id="tabContent" aria-live="polite"></section>
+
+    </main>
+
+    <script src="/js/common.js"></script>
+    <script src="/js/profile.js"></script>
+
+</body>
+
+</html>

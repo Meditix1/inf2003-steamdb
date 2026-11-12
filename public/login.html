@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in · SteamDB</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <a href="/" class="logo">SteamDB</a>
+    </header>
+
+    <main class="page auth-page">
+        <form id="loginForm" class="panel auth-form" novalidate>
+            <h1>Log in</h1>
+
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" required>
+
+            <label for="password">Password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required>
+
+            <p id="formError" class="error-text" role="alert"></p>
+
+            <button type="submit" class="button primary">Log in</button>
+
+            <p class="muted small">No account yet? <a id="registerLink" href="/register.html">Create one</a></p>
+        </form>
+    </main>
+
+    <script src="/js/login.js"></script>
+
+</body>
+
+</html>

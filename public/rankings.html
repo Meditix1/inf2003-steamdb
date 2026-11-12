@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rankings · SteamDB</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header class="header">
+        <a href="/" class="logo">SteamDB</a>
+        <form id="searchForm" class="search-container">
+            <input id="searchInput" type="search" placeholder="Search games..." autocomplete="off">
+            <button type="submit">Search</button>
+        </form>
+        <nav id="accountNav"></nav>
+    </header>
+
+    <main class="page">
+        <h1>Rankings</h1>
+        <nav class="tabs" aria-label="Ranking type">
+            <a href="#genres" data-tab="genres">Top by genre</a>
+            <a href="#years" data-tab="years">Best of each year</a>
+            <a href="#community" data-tab="community">Community</a>
+        </nav>
+        <p id="rankingNote" class="muted small"></p>
+        <section id="rankingContent" aria-live="polite"></section>
+    </main>
+
+    <script src="/js/common.js"></script>
+    <script src="/js/rankings.js"></script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+-> Table scan on <temporary>  (actual time=0.0999..0.1 rows=2 loops=1)
+    -> Aggregate using temporary table  (actual time=0.0982..0.0982 rows=2 loops=1)
+        -> Nested loop left join  (cost=3.27 rows=22.9) (actual time=0.0258..0.0476 rows=42 loops=1)
+            -> Covering index lookup on c using uq_user_name (user_id=2)  (cost=0.468 rows=2) (actual time=0.0135..0.0156 rows=2 loops=1)
+            -> Covering index lookup on cg using PRIMARY (collection_id=c.collection_id)  (cost=0.829 rows=11.5) (actual time=0.00701..0.0125 rows=21 loops=2)

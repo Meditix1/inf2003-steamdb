@@ -1,0 +1,4 @@
+-> Limit: 50 row(s)  (cost=5132 rows=50) (actual time=29.4..29.4 rows=50 loops=1)
+    -> Sort: game.wilson_score DESC, game.app_id, limit input to 50 row(s) per chunk  (cost=5132 rows=49313) (actual time=29.4..29.4 rows=50 loops=1)
+        -> Filter: ((game.release_date >= DATE'2019-01-01') and (game.release_date < DATE'2020-01-01'))  (cost=5132 rows=49313) (actual time=0.233..28.8 rows=3207 loops=1)
+            -> Table scan on game  (cost=5132 rows=49313) (actual time=0.0292..23 rows=50000 loops=1)

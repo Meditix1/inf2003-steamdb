@@ -1,0 +1,183 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "steamdb.games",
+    "parsedQuery": {
+      "$and": [
+        {
+          "full_audio_languages": {
+            "$eq": "Japanese"
+          }
+        },
+        {
+          "mac": {
+            "$eq": true
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "EC5A6BE3",
+    "planCacheShapeHash": "EC5A6BE3",
+    "planCacheKey": "708D11CE",
+    "optimizationTimeMillis": 0,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "PROJECTION_SIMPLE",
+      "transformBy": {
+        "name": 1
+      },
+      "inputStage": {
+        "stage": "FETCH",
+        "filter": {
+          "mac": {
+            "$eq": true
+          }
+        },
+        "nss": "steamdb.games",
+        "inputStage": {
+          "stage": "IXSCAN",
+          "nss": "steamdb.games",
+          "keyPattern": {
+            "full_audio_languages": 1
+          },
+          "indexName": "idx_full_audio",
+          "isMultiKey": true,
+          "multiKeyPaths": {
+            "full_audio_languages": [
+              "full_audio_languages"
+            ]
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "full_audio_languages": [
+              "[\"Japanese\", \"Japanese\"]"
+            ]
+          }
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 548,
+    "executionTimeMillis": 11,
+    "totalKeysExamined": 3187,
+    "totalDocsExamined": 3187,
+    "executionStages": {
+      "isCached": false,
+      "stage": "PROJECTION_SIMPLE",
+      "nReturned": 548,
+      "executionTimeMillisEstimate": 10,
+      "works": 3188,
+      "advanced": 548,
+      "needTime": 2639,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "transformBy": {
+        "name": 1
+      },
+      "inputStage": {
+        "stage": "FETCH",
+        "filter": {
+          "mac": {
+            "$eq": true
+          }
+        },
+        "nReturned": 548,
+        "executionTimeMillisEstimate": 10,
+        "works": 3188,
+        "advanced": 548,
+        "needTime": 2639,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 1,
+        "nss": "steamdb.games",
+        "docsExamined": 3187,
+        "alreadyHasObj": 0,
+        "inputStage": {
+          "stage": "IXSCAN",
+          "nReturned": 3187,
+          "executionTimeMillisEstimate": 0,
+          "works": 3188,
+          "advanced": 3187,
+          "needTime": 0,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 1,
+          "nss": "steamdb.games",
+          "keyPattern": {
+            "full_audio_languages": 1
+          },
+          "indexName": "idx_full_audio",
+          "isMultiKey": true,
+          "multiKeyPaths": {
+            "full_audio_languages": [
+              "full_audio_languages"
+            ]
+          },
+          "isUnique": false,
+          "isSparse": false,
+          "isPartial": false,
+          "indexVersion": 2,
+          "direction": "forward",
+          "indexBounds": {
+            "full_audio_languages": [
+              "[\"Japanese\", \"Japanese\"]"
+            ]
+          },
+          "keysExamined": 3187,
+          "seeks": 1,
+          "dupsTested": 3187,
+          "dupsDropped": 0,
+          "peakTrackedMemBytes": 29590
+        }
+      }
+    }
+  },
+  "queryShapeHash": "BC926180DBA48DBDDEF437F7F00EE5898D96AFE7BCF7D47ABD064277A9B25631",
+  "peakTrackedMemBytes": 29590,
+  "command": {
+    "find": "games",
+    "filter": {
+      "full_audio_languages": "Japanese",
+      "mac": true
+    },
+    "projection": {
+      "name": 1
+    },
+    "$db": "steamdb"
+  },
+  "serverInfo": {
+    "host": "b508008a5194",
+    "port": 27017,
+    "version": "8.3.11",
+    "gitVersion": "b8b83d6e6e1aed495578ad8c6f9234ad329c9955"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1
+}

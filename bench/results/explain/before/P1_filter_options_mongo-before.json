@@ -1,0 +1,803 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "steamdb.games",
+          "parsedQuery": {},
+          "indexFilterSet": false,
+          "queryHash": "936C65F9",
+          "planCacheShapeHash": "936C65F9",
+          "planCacheKey": "91C0EAA9",
+          "optimizationTimeMillis": 0,
+          "cursorType": "regular",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "PROJECTION_DEFAULT",
+            "transformBy": {
+              "_id": true,
+              "genres": true,
+              "categories": true,
+              "supported_languages": true,
+              "tags": {
+                "$cond": [
+                  {
+                    "$eq": [
+                      {
+                        "$type": [
+                          "$tags"
+                        ]
+                      },
+                      {
+                        "$const": "object"
+                      }
+                    ]
+                  },
+                  {
+                    "$map": {
+                      "input": {
+                        "$objectToArray": [
+                          "$tags"
+                        ]
+                      },
+                      "as": "tag",
+                      "in": "$$tag.k"
+                    }
+                  },
+                  {
+                    "$const": []
+                  }
+                ]
+              },
+              "_releaseDate": {
+                "$cond": [
+                  {
+                    "$eq": [
+                      {
+                        "$type": [
+                          "$release_date"
+                        ]
+                      },
+                      {
+                        "$const": "date"
+                      }
+                    ]
+                  },
+                  "$release_date",
+                  {
+                    "$dateFromString": {
+                      "dateString": "$release_date",
+                      "onNull": {
+                        "$const": null
+                      },
+                      "onError": {
+                        "$const": null
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "nss": "steamdb.games",
+              "direction": "forward"
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 50000,
+          "executionTimeMillis": 13042,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 50000,
+          "executionStages": {
+            "isCached": false,
+            "stage": "PROJECTION_DEFAULT",
+            "nReturned": 50000,
+            "executionTimeMillisEstimate": 5376,
+            "works": 50001,
+            "advanced": 50000,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 112,
+            "restoreState": 111,
+            "isEOF": 1,
+            "transformBy": {
+              "_id": true,
+              "genres": true,
+              "categories": true,
+              "supported_languages": true,
+              "tags": {
+                "$cond": [
+                  {
+                    "$eq": [
+                      {
+                        "$type": [
+                          "$tags"
+                        ]
+                      },
+                      {
+                        "$const": "object"
+                      }
+                    ]
+                  },
+                  {
+                    "$map": {
+                      "input": {
+                        "$objectToArray": [
+                          "$tags"
+                        ]
+                      },
+                      "as": "tag",
+                      "in": "$$tag.k"
+                    }
+                  },
+                  {
+                    "$const": []
+                  }
+                ]
+              },
+              "_releaseDate": {
+                "$cond": [
+                  {
+                    "$eq": [
+                      {
+                        "$type": [
+                          "$release_date"
+                        ]
+                      },
+                      {
+                        "$const": "date"
+                      }
+                    ]
+                  },
+                  "$release_date",
+                  {
+                    "$dateFromString": {
+                      "dateString": "$release_date",
+                      "onNull": {
+                        "$const": null
+                      },
+                      "onError": {
+                        "$const": null
+                      }
+                    }
+                  }
+                ]
+              }
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "nReturned": 50000,
+              "executionTimeMillisEstimate": 383,
+              "works": 50001,
+              "advanced": 50000,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 112,
+              "restoreState": 111,
+              "isEOF": 1,
+              "nss": "steamdb.games",
+              "direction": "forward",
+              "docsExamined": 50000
+            }
+          }
+        }
+      },
+      "nReturned": 50000,
+      "executionTimeMillisEstimate": 5545
+    },
+    {
+      "$facet": {
+        "genres": [
+          {
+            "$internalFacetTeeConsumer": {},
+            "nReturned": 50000,
+            "executionTimeMillisEstimate": 5773
+          },
+          {
+            "$unwind": {
+              "path": "$genres"
+            },
+            "nReturned": 144076,
+            "executionTimeMillisEstimate": 6023
+          },
+          {
+            "$match": {
+              "$and": [
+                {
+                  "genres": {
+                    "$type": [
+                      2
+                    ]
+                  }
+                },
+                {
+                  "genres": {
+                    "$not": {
+                      "$eq": ""
+                    }
+                  }
+                }
+              ]
+            },
+            "nReturned": 144076,
+            "executionTimeMillisEstimate": 6145
+          },
+          {
+            "$group": {
+              "_id": "$genres",
+              "$willBeMerged": false
+            },
+            "nReturned": 28,
+            "executionTimeMillisEstimate": 6773,
+            "maxAccumulatorMemoryUsageBytes": {},
+            "totalOutputDataSizeBytes": 6148,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledDataStorageSize": 0,
+            "spilledBytes": 0,
+            "spilledRecords": 0,
+            "peakTrackedMemBytes": 856
+          },
+          {
+            "$sort": {
+              "sortKey": {
+                "_id": 1
+              }
+            },
+            "totalDataSizeSortedBytesEstimate": 6780,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledBytes": 0,
+            "spilledRecords": 0,
+            "spilledDataStorageSize": 0,
+            "nReturned": 28,
+            "executionTimeMillisEstimate": 6773,
+            "peakTrackedMemBytes": 6780
+          },
+          {
+            "$project": {
+              "id": "$_id",
+              "name": "$_id",
+              "_id": false
+            },
+            "nReturned": 28,
+            "executionTimeMillisEstimate": 6773
+          }
+        ],
+        "categories": [
+          {
+            "$internalFacetTeeConsumer": {},
+            "nReturned": 50000,
+            "executionTimeMillisEstimate": 10
+          },
+          {
+            "$unwind": {
+              "path": "$categories"
+            },
+            "nReturned": 223914,
+            "executionTimeMillisEstimate": 114
+          },
+          {
+            "$match": {
+              "$and": [
+                {
+                  "categories": {
+                    "$type": [
+                      2
+                    ]
+                  }
+                },
+                {
+                  "categories": {
+                    "$not": {
+                      "$eq": ""
+                    }
+                  }
+                }
+              ]
+            },
+            "nReturned": 223914,
+            "executionTimeMillisEstimate": 1021
+          },
+          {
+            "$group": {
+              "_id": "$categories",
+              "$willBeMerged": false
+            },
+            "nReturned": 58,
+            "executionTimeMillisEstimate": 1487,
+            "maxAccumulatorMemoryUsageBytes": {},
+            "totalOutputDataSizeBytes": 13711,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledDataStorageSize": 0,
+            "spilledBytes": 0,
+            "spilledRecords": 0,
+            "peakTrackedMemBytes": 2749
+          },
+          {
+            "$sort": {
+              "sortKey": {
+                "_id": 1
+              }
+            },
+            "totalDataSizeSortedBytesEstimate": 15996,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledBytes": 0,
+            "spilledRecords": 0,
+            "spilledDataStorageSize": 0,
+            "nReturned": 58,
+            "executionTimeMillisEstimate": 1488,
+            "peakTrackedMemBytes": 15996
+          },
+          {
+            "$project": {
+              "id": "$_id",
+              "name": "$_id",
+              "_id": false
+            },
+            "nReturned": 58,
+            "executionTimeMillisEstimate": 1488
+          }
+        ],
+        "tags": [
+          {
+            "$internalFacetTeeConsumer": {},
+            "nReturned": 50000,
+            "executionTimeMillisEstimate": 20
+          },
+          {
+            "$unwind": {
+              "path": "$tags"
+            },
+            "nReturned": 519852,
+            "executionTimeMillisEstimate": 289
+          },
+          {
+            "$match": {
+              "tags": {
+                "$not": {
+                  "$eq": ""
+                }
+              }
+            },
+            "nReturned": 519852,
+            "executionTimeMillisEstimate": 1698
+          },
+          {
+            "$group": {
+              "_id": "$tags",
+              "games": {
+                "$sum": {
+                  "$const": 1
+                }
+              },
+              "$willBeMerged": false
+            },
+            "nReturned": 451,
+            "executionTimeMillisEstimate": 2520,
+            "maxAccumulatorMemoryUsageBytes": {
+              "games": 86592
+            },
+            "totalOutputDataSizeBytes": 111117,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledDataStorageSize": 0,
+            "spilledBytes": 0,
+            "spilledRecords": 0,
+            "peakTrackedMemBytes": 98038
+          },
+          {
+            "$sort": {
+              "sortKey": {
+                "games": -1,
+                "_id": 1
+              }
+            },
+            "totalDataSizeSortedBytesEstimate": 151427,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledBytes": 0,
+            "spilledRecords": 0,
+            "spilledDataStorageSize": 0,
+            "nReturned": 451,
+            "executionTimeMillisEstimate": 2520,
+            "peakTrackedMemBytes": 151427
+          },
+          {
+            "$project": {
+              "games": true,
+              "id": "$_id",
+              "name": "$_id",
+              "_id": false
+            },
+            "nReturned": 451,
+            "executionTimeMillisEstimate": 2520
+          }
+        ],
+        "languages": [
+          {
+            "$internalFacetTeeConsumer": {},
+            "nReturned": 50000,
+            "executionTimeMillisEstimate": 0
+          },
+          {
+            "$unwind": {
+              "path": "$supported_languages"
+            },
+            "nReturned": 283305,
+            "executionTimeMillisEstimate": 482
+          },
+          {
+            "$match": {
+              "$and": [
+                {
+                  "supported_languages": {
+                    "$type": [
+                      2
+                    ]
+                  }
+                },
+                {
+                  "supported_languages": {
+                    "$not": {
+                      "$eq": ""
+                    }
+                  }
+                }
+              ]
+            },
+            "nReturned": 283305,
+            "executionTimeMillisEstimate": 1231
+          },
+          {
+            "$group": {
+              "_id": "$supported_languages",
+              "games": {
+                "$sum": {
+                  "$const": 1
+                }
+              },
+              "$willBeMerged": false
+            },
+            "nReturned": 121,
+            "executionTimeMillisEstimate": 1510,
+            "maxAccumulatorMemoryUsageBytes": {
+              "games": 23232
+            },
+            "totalOutputDataSizeBytes": 30405,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledDataStorageSize": 0,
+            "spilledBytes": 0,
+            "spilledRecords": 0,
+            "peakTrackedMemBytes": 26896
+          },
+          {
+            "$sort": {
+              "sortKey": {
+                "games": -1,
+                "_id": 1
+              }
+            },
+            "totalDataSizeSortedBytesEstimate": 41813,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledBytes": 0,
+            "spilledRecords": 0,
+            "spilledDataStorageSize": 0,
+            "nReturned": 121,
+            "executionTimeMillisEstimate": 1510,
+            "peakTrackedMemBytes": 41813
+          }
+        ],
+        "years": [
+          {
+            "$internalFacetTeeConsumer": {},
+            "nReturned": 50000,
+            "executionTimeMillisEstimate": 302
+          },
+          {
+            "$match": {
+              "_releaseDate": {
+                "$not": {
+                  "$eq": null
+                }
+              }
+            },
+            "nReturned": 50000,
+            "executionTimeMillisEstimate": 510
+          },
+          {
+            "$group": {
+              "_id": {
+                "$const": null
+              },
+              "min": {
+                "$min": {
+                  "$year": {
+                    "date": "$_releaseDate"
+                  }
+                }
+              },
+              "max": {
+                "$max": {
+                  "$year": {
+                    "date": "$_releaseDate"
+                  }
+                }
+              },
+              "$willBeMerged": false
+            },
+            "nReturned": 1,
+            "executionTimeMillisEstimate": 749,
+            "maxAccumulatorMemoryUsageBytes": {
+              "min": 136,
+              "max": 136
+            },
+            "totalOutputDataSizeBytes": 269,
+            "usedDisk": false,
+            "spills": 0,
+            "spilledDataStorageSize": 0,
+            "spilledBytes": 0,
+            "spilledRecords": 0,
+            "peakTrackedMemBytes": 288
+          },
+          {
+            "$project": {
+              "min": true,
+              "max": true,
+              "_id": false
+            },
+            "nReturned": 1,
+            "executionTimeMillisEstimate": 749
+          }
+        ]
+      },
+      "nReturned": 1,
+      "executionTimeMillisEstimate": 13040
+    }
+  ],
+  "queryShapeHash": "CF2B929CEC67857F9AFF2F5EDFB4A871073C8A0A157A1CBB561D76C18224098D",
+  "serverInfo": {
+    "host": "b508008a5194",
+    "port": 27017,
+    "version": "8.3.11",
+    "gitVersion": "b8b83d6e6e1aed495578ad8c6f9234ad329c9955"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "games",
+    "pipeline": [
+      {
+        "$project": {
+          "tags": {
+            "$cond": [
+              {
+                "$eq": [
+                  {
+                    "$type": "$tags"
+                  },
+                  "object"
+                ]
+              },
+              {
+                "$map": {
+                  "input": {
+                    "$objectToArray": "$tags"
+                  },
+                  "as": "tag",
+                  "in": "$$tag.k"
+                }
+              },
+              []
+            ]
+          },
+          "genres": 1,
+          "categories": 1,
+          "supported_languages": 1,
+          "_releaseDate": {
+            "$cond": [
+              {
+                "$eq": [
+                  {
+                    "$type": "$release_date"
+                  },
+                  "date"
+                ]
+              },
+              "$release_date",
+              {
+                "$dateFromString": {
+                  "dateString": "$release_date",
+                  "onError": null,
+                  "onNull": null
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "$facet": {
+          "genres": [
+            {
+              "$unwind": "$genres"
+            },
+            {
+              "$match": {
+                "genres": {
+                  "$type": "string",
+                  "$ne": ""
+                }
+              }
+            },
+            {
+              "$group": {
+                "_id": "$genres"
+              }
+            },
+            {
+              "$sort": {
+                "_id": 1
+              }
+            },
+            {
+              "$project": {
+                "_id": 0,
+                "id": "$_id",
+                "name": "$_id"
+              }
+            }
+          ],
+          "categories": [
+            {
+              "$unwind": "$categories"
+            },
+            {
+              "$match": {
+                "categories": {
+                  "$type": "string",
+                  "$ne": ""
+                }
+              }
+            },
+            {
+              "$group": {
+                "_id": "$categories"
+              }
+            },
+            {
+              "$sort": {
+                "_id": 1
+              }
+            },
+            {
+              "$project": {
+                "_id": 0,
+                "id": "$_id",
+                "name": "$_id"
+              }
+            }
+          ],
+          "tags": [
+            {
+              "$unwind": "$tags"
+            },
+            {
+              "$match": {
+                "tags": {
+                  "$ne": ""
+                }
+              }
+            },
+            {
+              "$group": {
+                "_id": "$tags",
+                "games": {
+                  "$sum": 1
+                }
+              }
+            },
+            {
+              "$sort": {
+                "games": -1,
+                "_id": 1
+              }
+            },
+            {
+              "$project": {
+                "_id": 0,
+                "id": "$_id",
+                "name": "$_id",
+                "games": 1
+              }
+            }
+          ],
+          "languages": [
+            {
+              "$unwind": "$supported_languages"
+            },
+            {
+              "$match": {
+                "supported_languages": {
+                  "$type": "string",
+                  "$ne": ""
+                }
+              }
+            },
+            {
+              "$group": {
+                "_id": "$supported_languages",
+                "games": {
+                  "$sum": 1
+                }
+              }
+            },
+            {
+              "$sort": {
+                "games": -1,
+                "_id": 1
+              }
+            }
+          ],
+          "years": [
+            {
+              "$match": {
+                "_releaseDate": {
+                  "$ne": null
+                }
+              }
+            },
+            {
+              "$group": {
+                "_id": null,
+                "min": {
+                  "$min": {
+                    "$year": "$_releaseDate"
+                  }
+                },
+                "max": {
+                  "$max": {
+                    "$year": "$_releaseDate"
+                  }
+                }
+              }
+            },
+            {
+              "$project": {
+                "_id": 0,
+                "min": 1,
+                "max": 1
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "steamdb"
+  },
+  "ok": 1
+}

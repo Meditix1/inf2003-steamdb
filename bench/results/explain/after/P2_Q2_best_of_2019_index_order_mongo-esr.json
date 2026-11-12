@@ -1,0 +1,244 @@
+{
+  "explainVersion": "1",
+  "queryPlanner": {
+    "namespace": "steamdb.bench_p2_games",
+    "parsedQuery": {
+      "$and": [
+        {
+          "release_date": {
+            "$lt": "2020-01-01T00:00:00.000Z"
+          }
+        },
+        {
+          "release_date": {
+            "$gte": "2019-01-01T00:00:00.000Z"
+          }
+        }
+      ]
+    },
+    "indexFilterSet": false,
+    "queryHash": "10C99BC1",
+    "planCacheShapeHash": "10C99BC1",
+    "planCacheKey": "9E9A3B5F",
+    "optimizationTimeMillis": 1,
+    "maxIndexedOrSolutionsReached": false,
+    "maxIndexedAndSolutionsReached": false,
+    "maxScansToExplodeReached": false,
+    "prunedSimilarIndexes": false,
+    "winningPlan": {
+      "isCached": false,
+      "stage": "LIMIT",
+      "limitAmount": 50,
+      "inputStage": {
+        "stage": "PROJECTION_SIMPLE",
+        "transformBy": {
+          "name": 1,
+          "wilson_score": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "filter": {
+            "$and": [
+              {
+                "release_date": {
+                  "$lt": "2020-01-01T00:00:00.000Z"
+                }
+              },
+              {
+                "release_date": {
+                  "$gte": "2019-01-01T00:00:00.000Z"
+                }
+              }
+            ]
+          },
+          "nss": "steamdb.bench_p2_games",
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nss": "steamdb.bench_p2_games",
+            "keyPattern": {
+              "wilson_score": -1,
+              "_id": 1,
+              "release_date": 1
+            },
+            "indexName": "idx_p2_esr",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "wilson_score": [],
+              "_id": [],
+              "release_date": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "wilson_score": [
+                "[MaxKey, MinKey]"
+              ],
+              "_id": [
+                "[MinKey, MaxKey]"
+              ],
+              "release_date": [
+                "[MinKey, MaxKey]"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "rejectedPlans": []
+  },
+  "executionStats": {
+    "executionSuccess": true,
+    "nReturned": 50,
+    "executionTimeMillis": 7,
+    "totalKeysExamined": 616,
+    "totalDocsExamined": 616,
+    "executionStages": {
+      "isCached": false,
+      "stage": "LIMIT",
+      "nReturned": 50,
+      "executionTimeMillisEstimate": 0,
+      "works": 617,
+      "advanced": 50,
+      "needTime": 566,
+      "needYield": 0,
+      "saveState": 0,
+      "restoreState": 0,
+      "isEOF": 1,
+      "limitAmount": 50,
+      "inputStage": {
+        "stage": "PROJECTION_SIMPLE",
+        "nReturned": 50,
+        "executionTimeMillisEstimate": 0,
+        "works": 616,
+        "advanced": 50,
+        "needTime": 566,
+        "needYield": 0,
+        "saveState": 0,
+        "restoreState": 0,
+        "isEOF": 0,
+        "transformBy": {
+          "name": 1,
+          "wilson_score": 1
+        },
+        "inputStage": {
+          "stage": "FETCH",
+          "filter": {
+            "$and": [
+              {
+                "release_date": {
+                  "$lt": "2020-01-01T00:00:00.000Z"
+                }
+              },
+              {
+                "release_date": {
+                  "$gte": "2019-01-01T00:00:00.000Z"
+                }
+              }
+            ]
+          },
+          "nReturned": 50,
+          "executionTimeMillisEstimate": 0,
+          "works": 616,
+          "advanced": 50,
+          "needTime": 566,
+          "needYield": 0,
+          "saveState": 0,
+          "restoreState": 0,
+          "isEOF": 0,
+          "nss": "steamdb.bench_p2_games",
+          "docsExamined": 616,
+          "alreadyHasObj": 0,
+          "inputStage": {
+            "stage": "IXSCAN",
+            "nReturned": 616,
+            "executionTimeMillisEstimate": 0,
+            "works": 616,
+            "advanced": 616,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 0,
+            "restoreState": 0,
+            "isEOF": 0,
+            "nss": "steamdb.bench_p2_games",
+            "keyPattern": {
+              "wilson_score": -1,
+              "_id": 1,
+              "release_date": 1
+            },
+            "indexName": "idx_p2_esr",
+            "isMultiKey": false,
+            "multiKeyPaths": {
+              "wilson_score": [],
+              "_id": [],
+              "release_date": []
+            },
+            "isUnique": false,
+            "isSparse": false,
+            "isPartial": false,
+            "indexVersion": 2,
+            "direction": "forward",
+            "indexBounds": {
+              "wilson_score": [
+                "[MaxKey, MinKey]"
+              ],
+              "_id": [
+                "[MinKey, MaxKey]"
+              ],
+              "release_date": [
+                "[MinKey, MaxKey]"
+              ]
+            },
+            "keysExamined": 616,
+            "seeks": 1,
+            "dupsTested": 0,
+            "dupsDropped": 0,
+            "peakTrackedMemBytes": 0
+          }
+        }
+      }
+    }
+  },
+  "queryShapeHash": "90F3783722E3E69ED6A68DC3D6F607CEDF4DC5915A21188C9319ED24F8E971E4",
+  "command": {
+    "find": "bench_p2_games",
+    "filter": {
+      "release_date": {
+        "$gte": "2019-01-01T00:00:00.000Z",
+        "$lt": "2020-01-01T00:00:00.000Z"
+      }
+    },
+    "sort": {
+      "wilson_score": -1,
+      "_id": 1
+    },
+    "projection": {
+      "name": 1,
+      "wilson_score": 1
+    },
+    "hint": "idx_p2_esr",
+    "limit": 50,
+    "$db": "steamdb"
+  },
+  "serverInfo": {
+    "host": "b508008a5194",
+    "port": 27017,
+    "version": "8.3.11",
+    "gitVersion": "b8b83d6e6e1aed495578ad8c6f9234ad329c9955"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "ok": 1
+}

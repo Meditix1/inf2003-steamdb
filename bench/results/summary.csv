@@ -1,0 +1,126 @@
+date,label,experiment,query,impl,runs,median_ms,p95_ms,mean_ms,min_ms,max_ms,rows,docsExamined,keysExamined,plan
+2026-11-03T17:50:29.284Z,before,P1,home_default,mongo-before,30,954.424,1633.246,1086.05,797.136,1888.215,24,50000,0,COLLSCAN > $facet > $group > $sort
+2026-11-03T17:50:36.898Z,before,P1,search_portal,mongo-before,30,217.68,271.11,221.694,166.448,278.592,24,50000,0,COLLSCAN > $facet > $group > $sort
+2026-11-03T17:50:53.819Z,before,P1,genre_action_by_rating,mongo-before,30,476.703,600.769,493.422,442.096,609.335,24,50000,0,COLLSCAN > $facet > $group > $sort
+2026-11-03T17:54:06.317Z,before,P1,tags_roguelike_pixel,mongo-before,30,5742.313,6487.95,5816.68,5263.743,6496.969,0,50000,0,COLLSCAN > $facet > $group > $sort
+2026-11-03T17:55:59.320Z,before,P1,best_of_2019,mongo-before,30,3249.877,3742.143,3315.497,2985.77,4497.992,24,50000,0,COLLSCAN > $facet > $group > $sort
+2026-11-03T17:56:34.786Z,before,P1,free_mac_popular,mongo-before,30,1000.456,1483.195,1034.889,770.534,1499.207,24,50000,0,COLLSCAN > $facet > $group > $sort
+2026-11-03T17:57:16.797Z,before,P1,japanese_full_audio,mongo-before,30,1243.846,1284.593,1225.885,989.587,1721.319,24,50000,0,COLLSCAN > $facet > $group > $sort
+2026-11-03T17:59:33.122Z,before,P1,deep_page_100,mongo-before,30,3737.82,4752.032,4000.325,3474.693,10802.757,24,50000,0,COLLSCAN > $facet > $group > $sort
+2026-11-03T18:05:59.842Z,before,P1,filter_options,mongo-before,30,10751.744,13709.815,11123.438,9491.181,16231.11,28,50000,0,COLLSCAN > $facet > $unwind > $group > $sort
+2026-11-03T18:06:34.807Z,before,P3,Q1_all_tags_best_rated,mysql,30,6.075,197.675,39.3,5.024,200.942,0,,,see explain file
+2026-11-03T18:06:35.585Z,before,P3,Q1_all_tags_best_rated,mongo-before,30,987.138,1247.824,970.136,770.743,1480.001,0,50000,0,COLLSCAN > $sort
+2026-11-03T18:07:45.071Z,before,P3,Q2_best_of_2019,mysql,30,216.724,227.586,133.229,27.98,230.184,50,,,see explain file
+2026-11-03T18:07:47.081Z,before,P3,Q2_best_of_2019,mongo-before,30,1989.939,2239.188,1958.715,1754.144,2492.709,50,50000,0,COLLSCAN > $sort
+2026-11-03T18:10:14.662Z,before,P3,Q3_genre_ranking,mysql,30,1747.264,3747.043,2056.411,1545.552,7447.631,24,,,see explain file
+2026-11-03T18:10:18.812Z,before,P3,Q3_genre_ranking,mongo-before,30,2214.389,3756.088,2359.421,1807.59,5500.031,24,50000,0,COLLSCAN > $unwind > $group > $sort
+2026-11-03T18:11:01.801Z,before,P3,Q4_japanese_audio_mac,mysql,30,19.641,224.977,63.057,10.484,240.965,548,,,see explain file
+2026-11-03T18:11:03.539Z,before,P3,Q4_japanese_audio_mac,mongo-before,30,1225.099,1698.102,1213.455,975.645,2024.245,548,50000,0,COLLSCAN
+2026-11-03T18:12:11.111Z,before,P3,Q5_top_tags_free_games,mysql,30,712.337,755.359,656.793,519.069,757.431,20,,,see explain file
+2026-11-03T18:12:12.305Z,before,P3,Q5_top_tags_free_games,mongo-before,30,1237.509,1491.541,1233.704,1011.114,1500.829,20,50000,0,COLLSCAN > $unwind > $group > $sort
+2026-11-03T18:12:17.625Z,before,P3,Q6_full_game_page,mysql,30,31.296,142.034,49.512,2.608,244.521,1,,,see explain file
+2026-11-03T18:12:17.678Z,before,P3,Q6_full_game_page,mongo-before,30,4.341,5.194,5.151,2.005,43.59,1,1,1,EXPRESS_IXSCAN
+2026-11-03T18:12:18.687Z,before,P3,Q7_fetch_1000_records,mysql,30,2.878,4.019,3.014,2.126,5.333,1000,,,see explain file
+2026-11-03T18:12:18.867Z,before,P3,Q7_fetch_1000_records,mongo-before,30,11.772,27.127,14.399,9.103,37.919,1000,1000,1000,FETCH > IXSCAN
+2026-11-03T18:12:51.062Z,before,P3,Q7_fetch_10000_records,mysql,30,208.021,240.812,139.518,15.237,251.673,10000,,,see explain file
+2026-11-03T18:12:51.582Z,before,P3,Q7_fetch_10000_records,mongo-before,30,773.858,1003.577,833.053,547.268,1198.216,10000,10000,10000,FETCH > IXSCAN
+2026-11-03T18:12:56.308Z,before,P6,C1_open_collection,mysql,30,33.677,71.147,33.904,1.83,82.977,20,,,see explain file
+2026-11-03T18:12:56.313Z,before,P6,C1_open_collection,mongo-embedded,30,3.338,9.041,4.436,2.344,23.402,20,20,40,EXPRESS_IXSCAN > $lookup
+2026-11-03T18:12:56.322Z,before,P6,C1_open_collection,mongo-referenced,30,5.554,13.154,6.212,2.665,14.083,20,20,20,FETCH > IXSCAN > SORT > $lookup > $sort
+2026-11-03T18:12:56.652Z,before,P6,C2_list_user_collections,mysql,30,1.304,2.653,1.471,1.157,3.461,2,,,see explain file
+2026-11-03T18:12:56.657Z,before,P6,C2_list_user_collections,mongo-embedded,30,2.107,3.139,2.179,1.579,3.267,2,2,2,FETCH > IXSCAN
+2026-11-03T18:12:56.664Z,before,P6,C2_list_user_collections,mongo-referenced,30,2.672,4.543,2.838,2.012,4.694,2,2,44,FETCH > IXSCAN > $lookup
+2026-11-03T18:12:57.583Z,before,P6,C3_collections_containing_game,mysql,30,1.325,3.81,1.907,1.029,5.857,580,,,see explain file
+2026-11-03T18:12:57.589Z,before,P6,C3_collections_containing_game,mongo-embedded,30,3.309,6.254,3.528,1.72,6.49,580,580,580,FETCH > IXSCAN
+2026-11-03T18:12:57.598Z,before,P6,C3_collections_containing_game,mongo-referenced,30,3.868,8.492,9.648,1.885,178.826,580,580,580,FETCH > IXSCAN
+2026-11-03T18:13:18.590Z,before,P6,C4_most_collected_games,mysql,30,239.147,250.897,215.581,48.294,251.334,10,,,see explain file
+2026-11-03T18:13:19.048Z,before,P6,C4_most_collected_games,mongo-embedded,30,252.257,267.54,258.704,244.287,446.316,10,3864,10,COLLSCAN > $unwind > $group > $sort > $lookup
+2026-11-03T18:13:19.706Z,before,P6,C4_most_collected_games,mongo-referenced,30,221.178,254.584,150.539,28.212,272.045,10,43602,10,GROUP > COLLSCAN > $sort > $lookup > $group
+2026-11-03T18:41:32.827Z,after,P1,home_default,mongo-after,30,3.675,7.346,4.189,2.413,7.73,24,24,24,FETCH > IXSCAN
+2026-11-03T18:41:37.667Z,after,P1,search_portal,mongo-after,30,135.113,154.06,137.797,129.09,172.666,24,24,40400,FETCH > IXSCAN
+2026-11-03T18:41:38.236Z,after,P1,genre_action_by_rating,mongo-after,30,11.363,17.951,12.869,9.967,35.682,24,24,24,FETCH > IXSCAN
+2026-11-03T18:41:38.534Z,after,P1,tags_roguelike_pixel,mongo-after,30,3.043,5.185,3.55,2.394,6.236,0,0,0,SORT > FETCH > IXSCAN
+2026-11-03T18:41:41.835Z,after,P1,best_of_2019,mongo-after,30,6.402,13.426,7.747,4.72,14.042,24,368,368,FETCH > IXSCAN > SORT
+2026-11-03T18:41:48.088Z,after,P1,free_mac_popular,mongo-after,30,31.043,251.034,59.829,28.356,626.05,24,366,366,FETCH > IXSCAN > SORT
+2026-11-03T18:41:49.978Z,after,P1,japanese_full_audio,mongo-after,30,21.334,24.056,21.489,18.404,26.707,24,410,410,FETCH > IXSCAN > SORT
+2026-11-03T18:41:50.186Z,after,P1,deep_page_100,mongo-after,30,4.463,8.771,6.148,4.052,44.842,24,24,2400,FETCH > IXSCAN
+2026-11-03T18:42:35.869Z,after,P1,filter_options,mongo-after,30,1006.662,2024.785,1211.463,921.281,3077.512,28,50000,0,COLLSCAN > $unwind > $group > $sort
+2026-11-03T18:42:40.190Z,after,P3,Q1_all_tags_best_rated,mysql,30,6.187,62.45,13.453,5.391,88.254,0,,,see explain file
+2026-11-03T18:42:40.194Z,after,P3,Q1_all_tags_best_rated,mongo-after,30,2.651,3.498,2.728,2.076,4.225,0,0,0,SORT > FETCH > IXSCAN
+2026-11-03T18:42:48.238Z,after,P3,Q2_best_of_2019,mysql,30,28.984,32.988,29.519,27.188,33.339,50,,,see explain file
+2026-11-03T18:42:48.250Z,after,P3,Q2_best_of_2019,mongo-after,30,5.202,7.94,5.605,4.28,9.265,50,616,616,FETCH > IXSCAN > SORT
+2026-11-03T18:44:13.494Z,after,P3,Q3_genre_ranking,mysql,30,1738.083,1971.02,1461.275,414.788,2182.933,24,,,see explain file
+2026-11-03T18:44:15.228Z,after,P3,Q3_genre_ranking,mongo-after,30,1261.841,1500.047,1114.936,308.076,1513.714,24,50000,0,COLLSCAN > $unwind > $group > $sort
+2026-11-03T18:44:20.190Z,after,P3,Q4_japanese_audio_mac,mysql,30,11.342,199.875,54.704,9.333,201.049,548,,,see explain file
+2026-11-03T18:44:20.205Z,after,P3,Q4_japanese_audio_mac,mongo-after,30,17.961,222.55,63.258,14.935,223.141,548,3187,3187,FETCH > IXSCAN
+2026-11-03T18:44:58.685Z,after,P3,Q5_top_tags_free_games,mysql,30,521.314,728.026,518.312,147.397,732.311,20,,,see explain file
+2026-11-03T18:44:59.016Z,after,P3,Q5_top_tags_free_games,mongo-after,30,272.429,481.454,299.061,65.083,504.087,20,7818,7818,FETCH > IXSCAN > $unwind > $group > $sort
+2026-11-03T18:45:01.842Z,after,P3,Q6_full_game_page,mysql,30,10.74,107.909,31.49,2.265,137.15,1,,,see explain file
+2026-11-03T18:45:01.845Z,after,P3,Q6_full_game_page,mongo-after,30,2.811,4.502,4.06,1.438,37.122,1,1,1,EXPRESS_IXSCAN
+2026-11-03T18:45:02.993Z,after,P3,Q7_fetch_1000_records,mysql,30,2.481,4.284,2.827,2.166,4.823,1000,,,see explain file
+2026-11-03T18:45:03.193Z,after,P3,Q7_fetch_1000_records,mongo-after,30,12.126,199.736,32.734,8.913,205.742,1000,1000,1000,FETCH > IXSCAN
+2026-11-03T18:45:24.971Z,after,P3,Q7_fetch_10000_records,mysql,30,43.821,238.657,126.25,15.071,243.095,10000,,,see explain file
+2026-11-03T18:45:25.221Z,after,P3,Q7_fetch_10000_records,mongo-after,30,503.506,731.022,530.797,280.024,755.118,10000,10000,10000,FETCH > IXSCAN
+2026-11-03T18:45:28.432Z,after,P6,C1_open_collection,mysql,30,6.851,72.874,23.129,1.59,190.167,20,,,see explain file
+2026-11-03T18:45:28.436Z,after,P6,C1_open_collection,mongo-embedded,30,3.384,6.1,4.649,2.074,36.493,20,20,40,EXPRESS_IXSCAN > $lookup
+2026-11-03T18:45:28.444Z,after,P6,C1_open_collection,mongo-referenced,30,4.209,8.44,4.844,2.743,8.606,20,20,20,FETCH > IXSCAN > SORT > $lookup > $sort
+2026-11-03T18:45:28.724Z,after,P6,C2_list_user_collections,mysql,30,1.217,1.523,2.815,1.05,49.039,2,,,see explain file
+2026-11-03T18:45:28.729Z,after,P6,C2_list_user_collections,mongo-embedded,30,1.807,2.454,1.934,1.479,3.754,2,2,2,FETCH > IXSCAN
+2026-11-03T18:45:28.734Z,after,P6,C2_list_user_collections,mongo-referenced,30,2.287,3.697,2.454,1.849,3.721,2,2,44,FETCH > IXSCAN > $lookup
+2026-11-03T18:45:29.949Z,after,P6,C3_collections_containing_game,mysql,30,1.306,3.438,7.474,1.075,175.736,580,,,see explain file
+2026-11-03T18:45:29.958Z,after,P6,C3_collections_containing_game,mongo-embedded,30,3.216,9.467,9.295,2.034,170.092,580,580,580,FETCH > IXSCAN
+2026-11-03T18:45:29.968Z,after,P6,C3_collections_containing_game,mongo-referenced,30,3.946,171.69,15.151,1.917,183.209,580,580,580,FETCH > IXSCAN
+2026-11-03T18:45:50.702Z,after,P6,C4_most_collected_games,mysql,30,238.998,252.033,219.482,48.983,254.647,10,,,see explain file
+2026-11-03T18:45:50.962Z,after,P6,C4_most_collected_games,mongo-embedded,30,251.631,440.961,257.272,56.973,491.136,10,3864,10,COLLSCAN > $unwind > $group > $sort > $lookup
+2026-11-03T18:45:51.540Z,after,P6,C4_most_collected_games,mongo-referenced,30,220.003,259.199,148.286,30.246,327.928,10,43602,10,GROUP > COLLSCAN > $sort > $lookup > $group
+2026-11-04T01:41:36.624Z,after,P2,Q2_best_of_2019_index_order,mysql-date-score,30,11.17,213.169,56.981,9.19,214.496,50,,,see explain file
+2026-11-04T01:41:36.795Z,after,P2,Q2_best_of_2019_index_order,mysql-score-date,30,29.918,228.686,73.462,26.808,239.24,50,,,see explain file
+2026-11-04T01:41:36.799Z,after,P2,Q2_best_of_2019_index_order,mysql-esr,30,3.472,191.866,16.261,3.046,193.646,50,,,see explain file
+2026-11-04T01:41:36.813Z,after,P2,Q2_best_of_2019_index_order,mongo-date-score,30,10.414,201.104,48.826,9.119,207.042,50,50,3207,FETCH > SORT > IXSCAN
+2026-11-04T01:41:37.551Z,after,P2,Q2_best_of_2019_index_order,mongo-score-date,30,515.44,719.987,515.022,132.555,729.866,50,50000,50000,SORT > FETCH > IXSCAN
+2026-11-04T01:41:37.564Z,after,P2,Q2_best_of_2019_index_order,mongo-esr,30,5.136,195.033,40.48,4.02,195.681,50,616,616,FETCH > IXSCAN
+2026-11-04T01:52:53.340Z,after,P4,Q_below_genre_avg,mysql-correlated,30,6759.275,7538.494,6967.911,6009.151,12269.687,358,,,see explain file
+2026-11-04T01:52:53.386Z,after,P4,Q_below_genre_avg,mysql-cte,30,9.439,198.989,29.188,7.912,199.999,358,,,see explain file
+2026-11-04T01:52:53.484Z,after,P4,Q_below_genre_avg,mysql-window,30,7.74,199.781,45.999,6.729,200.237,358,,,see explain file
+2026-11-04T01:53:07.225Z,after,P4,Q_below_genre_avg,mongo-lookup,30,11296.069,19539.451,12080.468,10499.258,21736.318,358,575292,575292,FETCH > IXSCAN > $unwind > $lookup > $group
+2026-11-04T01:53:07.328Z,after,P4,Q_below_genre_avg,mongo-window,30,19.736,216.341,95.602,16.308,222.076,358,1146,1146,FETCH > IXSCAN > $unwind > $sort
+2026-11-04T01:53:16.366Z,after,P5,page_0001,mysql-offset,30,1.426,2.651,1.639,1.16,3.367,24,,,see explain file
+2026-11-04T01:53:16.371Z,after,P5,page_0001,mysql-keyset,30,1.337,2.689,1.513,1.011,3.525,24,,,see explain file
+2026-11-04T01:53:16.537Z,after,P5,page_0001,mongo-skip,30,3.68,6.423,5.311,2.39,41.111,24,24,24,FETCH > IXSCAN
+2026-11-04T01:53:16.541Z,after,P5,page_0001,mongo-keyset,30,3.162,6.087,3.703,2.42,7.504,24,24,24,FETCH > IXSCAN
+2026-11-04T01:53:18.304Z,after,P5,page_0010,mysql-offset,30,2.414,7.463,9.039,1.716,192.533,24,,,see explain file
+2026-11-04T01:53:18.326Z,after,P5,page_0010,mysql-keyset,30,1.453,2.831,1.638,1.082,3.091,24,,,see explain file
+2026-11-04T01:53:18.330Z,after,P5,page_0010,mongo-skip,30,3.396,193.406,16.397,2.299,198.299,24,24,240,FETCH > IXSCAN
+2026-11-04T01:53:18.334Z,after,P5,page_0010,mongo-keyset,30,2.792,107.841,12.758,2.09,192.227,24,24,24,FETCH > SORT_MERGE > IXSCAN
+2026-11-04T01:53:21.076Z,after,P5,page_0100,mysql-offset,30,7.608,199.688,32.182,6.841,199.703,24,,,see explain file
+2026-11-04T01:53:21.078Z,after,P5,page_0100,mysql-keyset,30,1.413,176.217,13.635,1.258,191.66,24,,,see explain file
+2026-11-04T01:53:21.091Z,after,P5,page_0100,mongo-skip,30,5.066,33.477,13.063,4.058,193.97,24,24,2400,FETCH > IXSCAN
+2026-11-04T01:53:21.284Z,after,P5,page_0100,mongo-keyset,30,2.524,191.94,15.256,2.074,192.059,24,24,24,FETCH > SORT_MERGE > IXSCAN
+2026-11-04T01:53:28.594Z,after,P5,page_0500,mysql-offset,30,218.948,232.524,146.199,29.499,234.162,24,,,see explain file
+2026-11-04T01:53:28.786Z,after,P5,page_0500,mysql-keyset,30,1.451,3.037,7.922,1.255,192.219,24,,,see explain file
+2026-11-04T01:53:28.916Z,after,P5,page_0500,mongo-skip,30,11.428,199.83,38.759,10.414,200.723,24,24,12000,FETCH > IXSCAN
+2026-11-04T01:53:28.921Z,after,P5,page_0500,mongo-keyset,30,2.649,191.503,15.589,2.295,192.702,24,24,25,FETCH > SORT_MERGE > IXSCAN
+2026-11-04T01:53:41.810Z,after,P5,page_1000,mysql-offset,30,248.837,267.956,250.864,241.692,268.436,24,,,see explain file
+2026-11-04T01:53:41.812Z,after,P5,page_1000,mysql-keyset,30,1.452,3.624,1.743,1.19,3.647,24,,,see explain file
+2026-11-04T01:53:42.132Z,after,P5,page_1000,mongo-skip,30,20.192,216.047,89.715,17.643,219.177,24,24,24000,FETCH > IXSCAN
+2026-11-04T01:53:42.136Z,after,P5,page_1000,mongo-keyset,30,2.715,193.383,15.711,2.154,195.72,24,24,25,FETCH > SORT_MERGE > IXSCAN
+2026-11-04T01:54:05.670Z,after,P5,page_2000,mysql-offset,30,492.479,703.145,502.005,301.807,708.32,24,,,see explain file
+2026-11-04T01:54:05.672Z,after,P5,page_2000,mysql-keyset,30,1.315,2.013,1.477,1.152,3.208,24,,,see explain file
+2026-11-04T01:54:06.046Z,after,P5,page_2000,mongo-skip,30,53.476,232.468,131.974,32.705,233.872,24,24,48000,FETCH > IXSCAN
+2026-11-04T01:54:06.051Z,after,P5,page_2000,mongo-keyset,30,2.772,185.921,15.257,2.28,189.667,24,24,24,FETCH > SORT_MERGE > IXSCAN
+2026-11-09T15:52:11.623Z,after-roguefix,P3,Q1_all_tags_best_rated,mysql,30,9.646,63.728,13.91,8.539,67.73,24,,,see explain file
+2026-11-09T15:52:12.014Z,after-roguefix,P3,Q1_all_tags_best_rated,mongo-after,30,6.977,17.868,11.871,6.419,91.785,24,741,741,FETCH > IXSCAN > SORT
+2026-11-09T15:52:17.240Z,after-roguefix,P3,Q2_best_of_2019,mysql,30,27.676,44.06,29.997,26.637,75.712,50,,,see explain file
+2026-11-09T15:52:29.471Z,after-roguefix,P3,Q2_best_of_2019,mongo-after,30,4.784,6.137,4.897,4.379,6.453,50,616,616,FETCH > IXSCAN > SORT
+2026-11-09T15:55:12.078Z,after-roguefix,P3,Q3_genre_ranking,mysql,30,392.9,418.938,400.536,387.006,486.274,24,,,see explain file
+2026-11-09T15:55:12.492Z,after-roguefix,P3,Q3_genre_ranking,mongo-after,30,381.069,2796.55,823.967,268.992,3522.297,24,50000,0,COLLSCAN > $unwind > $group > $sort
+2026-11-09T15:55:14.765Z,after-roguefix,P3,Q4_japanese_audio_mac,mysql,30,10.116,11.274,10.236,9.47,12.194,548,,,see explain file
+2026-11-09T15:55:14.780Z,after-roguefix,P3,Q4_japanese_audio_mac,mongo-after,30,17.179,27.922,18.998,14.755,59.079,548,3187,3187,FETCH > IXSCAN
+2026-11-09T15:55:34.560Z,after-roguefix,P3,Q5_top_tags_free_games,mysql,30,135.907,148.523,139.791,132.271,190.892,20,,,see explain file
+2026-11-09T15:55:34.647Z,after-roguefix,P3,Q5_top_tags_free_games,mongo-after,30,62.561,77.712,65.186,60.44,81.421,20,7818,7818,FETCH > IXSCAN > $unwind > $group > $sort
+2026-11-09T15:55:37.702Z,after-roguefix,P3,Q6_full_game_page,mysql,30,10.528,117.404,32.199,1.826,166.306,1,,,see explain file
+2026-11-09T15:55:37.704Z,after-roguefix,P3,Q6_full_game_page,mongo-after,30,2.992,4.41,3.41,1.559,23.441,1,1,1,EXPRESS_IXSCAN
+2026-11-09T15:55:38.217Z,after-roguefix,P3,Q7_fetch_1000_records,mysql,30,2.458,5.525,2.945,2.101,11.141,1000,,,see explain file
+2026-11-09T15:55:38.225Z,after-roguefix,P3,Q7_fetch_1000_records,mongo-after,30,10.877,19.399,12.07,9.112,24.897,1000,1000,1000,FETCH > IXSCAN
+2026-11-09T15:55:42.843Z,after-roguefix,P3,Q7_fetch_10000_records,mysql,30,29.198,37.55,27.174,18.193,39.767,10000,,,see explain file
+2026-11-09T15:55:42.883Z,after-roguefix,P3,Q7_fetch_10000_records,mongo-after,30,106.516,136.819,105.335,84.409,153.694,10000,10000,10000,FETCH > IXSCAN

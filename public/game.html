@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game · SteamDB</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <header class="header">
+        <a href="/" class="logo">SteamDB</a>
+
+        <form id="searchForm" class="search-container">
+            <input id="searchInput" type="search" placeholder="Search games..." autocomplete="off">
+            <button type="submit">Search</button>
+        </form>
+
+        <nav id="accountNav"></nav>
+    </header>
+
+    <main class="page">
+
+        <!-- Game details (MongoDB) -->
+        <section id="gameHeader" class="game-hero" aria-busy="true">
+            <p class="muted">Loading game...</p>
+        </section>
+
+        <!-- Screenshots, tags, developers, languages: same MongoDB document -->
+        <section id="gameDetails"></section>
+
+        <!-- My library / wishlist (MySQL) -->
+        <section id="actions" class="panel actions-panel" aria-label="Your library"></section>
+
+        <!-- Similar games (MongoDB aggregation on shared tags) -->
+        <section id="similarGames" class="panel" hidden></section>
+
+        <!-- Reviews (MySQL) -->
+        <section class="panel" aria-labelledby="reviewsTitle">
+            <div class="section-heading">
+                <h2 id="reviewsTitle">Reviews</h2>
+                <label class="sort">
+                    Sort
+                    <select id="reviewSort">
+                        <option value="helpful">Most helpful</option>
+                        <option value="newest">Newest</option>
+                        <option value="highest">Highest rated</option>
+                        <option value="lowest">Lowest rated</option>
+                    </select>
+                </label>
+            </div>
+
+            <div id="reviewSummary" class="review-summary"></div>
+            <div id="myReview"></div>
+            <div id="reviewList" class="review-list"></div>
+            <button id="moreReviews" type="button" class="button" hidden>Show more reviews</button>
+        </section>
+
+    </main>
+
+    <script src="/js/common.js"></script>
+    <script src="/js/game.js"></script>
+
+</body>
+
+</html>

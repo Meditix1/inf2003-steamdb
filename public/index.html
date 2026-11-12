@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SteamDB</title>
+
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <a href="/" class="logo">SteamDB</a>
+
+        <form id="searchForm" class="search-container">
+            <input
+                id="searchInput"
+                type="search"
+                placeholder="Search games..."
+                autocomplete="off"
+            >
+            <button type="submit">Search</button>
+        </form>
+
+        <nav id="accountNav">
+            <!-- Filled by app.js -->
+        </nav>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="browse-layout">
+
+        <button
+            id="filterToggle"
+            class="filter-toggle"
+            type="button"
+            aria-expanded="false"
+            aria-controls="filters"
+        >
+            Filters
+        </button>
+
+
+        <!-- FILTER SIDEBAR -->
+
+        <aside id="filters" class="filters">
+
+            <div class="filters-header">
+                <h2>Filters</h2>
+                <button id="clearFilters" type="button" class="link-button">Clear all</button>
+            </div>
+
+            <section class="filter-group">
+                <h3>Price</h3>
+                <label class="check">
+                    <input type="checkbox" id="freeOnly">
+                    Free to play only
+                </label>
+            </section>
+
+            <section class="filter-group">
+                <h3>Tags</h3>
+                <p class="hint">Games must have every tag you pick.</p>
+                <input
+                    id="tagInput"
+                    type="text"
+                    list="tagOptions"
+                    placeholder="Add a tag, e.g. Roguelike"
+                    autocomplete="off"
+                >
+                <datalist id="tagOptions"></datalist>
+                <div id="selectedTags" class="chip-row"></div>
+                <div id="popularTags" class="chip-row muted-chips"></div>
+            </section>
+
+            <section class="filter-group">
+                <h3>Features</h3>
+                <div id="categoryList" class="check-list"></div>
+            </section>
+
+            <section class="filter-group">
+                <h3>Platform</h3>
+                <label class="check"><input type="checkbox" name="platform" value="windows"> Windows</label>
+                <label class="check"><input type="checkbox" name="platform" value="mac"> macOS</label>
+                <label class="check"><input type="checkbox" name="platform" value="linux"> Linux</label>
+            </section>
+
+            <section class="filter-group">
+                <h3>Language</h3>
+                <select id="languageSelect" aria-label="Language">
+                    <option value="">Any language</option>
+                </select>
+                <label class="check">
+                    <input type="checkbox" id="fullAudio">
+                    Full audio, not just subtitles
+                </label>
+            </section>
+
+            <section class="filter-group">
+                <h3>Age rating</h3>
+                <select id="maxAge" aria-label="Maximum required age">
+                    <option value="">Any age rating</option>
+                    <option value="0">No age requirement</option>
+                    <option value="13">Required age 13 or under</option>
+                    <option value="16">Required age 16 or under</option>
+                    <option value="18">Required age 18 or under</option>
+                </select>
+            </section>
+
+            <section class="filter-group">
+                <h3>Release era</h3>
+                <div id="decadeChips" class="chip-row"></div>
+                <select id="yearSelect" aria-label="Release year">
+                    <option value="">Any year</option>
+                </select>
+            </section>
+
+        </aside>
+
+
+        <!-- RESULTS -->
+
+        <section class="results">
+
+            <div id="genreBar" class="genre-bar" aria-label="Genres"></div>
+
+            <div class="page-heading">
+                <h1 id="pageTitle">Games</h1>
+                <p id="gameCount"></p>
+
+                <label class="sort">
+                    Sort
+                    <select id="sortSelect">
+                        <option value="name">Name (A–Z)</option>
+                        <option value="rating">Best rated</option>
+                        <option value="popular">Most played</option>
+                        <option value="newest">Newest</option>
+                        <option value="price_asc">Price: low to high</option>
+                    </select>
+                </label>
+            </div>
+
+            <div id="loading" role="status">Loading games...</div>
+
+            <div id="gamesGrid" class="games-grid"></div>
+
+            <div class="pager">
+                <button id="prevPage" type="button" disabled>Previous</button>
+                <span id="pageInfo"></span>
+                <button id="nextPage" type="button" disabled>Next</button>
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script src="/js/app.js"></script>
+
+</body>
+
+</html>

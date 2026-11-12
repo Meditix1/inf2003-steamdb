@@ -1,0 +1,10 @@
+# Claude
+.claude/
+**/.claude/
+CLAUDE.md
+**/CLAUDE.md
+.claude.json
+.claude.json.*
+.mcp.json
+.env
+/node_modules

@@ -1,0 +1,4 @@
+-> Nested loop inner join  (cost=1436 rows=319) (actual time=0.122..13.9 rows=548 loops=1)
+    -> Covering index lookup on gl using idx_game_language_lang (language_id='20', has_full_audio=true)  (cost=321 rows=3187) (actual time=0.104..1.56 rows=3187 loops=1)
+    -> Filter: (g.supports_mac = 1)  (cost=0.25 rows=0.1) (actual time=0.00369..0.00371 rows=0.172 loops=3187)
+        -> Single-row index lookup on g using PRIMARY (app_id=gl.game_id)  (cost=0.25 rows=1) (actual time=0.00341..0.00345 rows=1 loops=3187)

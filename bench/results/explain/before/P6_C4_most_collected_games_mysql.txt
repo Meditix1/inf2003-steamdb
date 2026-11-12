@@ -1,0 +1,7 @@
+-> Limit: 10 row(s)  (actual time=263..263 rows=10 loops=1)
+    -> Sort: n DESC, g.app_id, limit input to 10 row(s) per chunk  (actual time=263..263 rows=10 loops=1)
+        -> Table scan on <temporary>  (actual time=262..263 rows=2553 loops=1)
+            -> Aggregate using temporary table  (actual time=262..262 rows=2553 loops=1)
+                -> Nested loop inner join  (cost=21523 rows=47739) (actual time=0.774..38.4 rows=43602 loops=1)
+                    -> Covering index scan on cg using idx_cg_game  (cost=4814 rows=47739) (actual time=0.755..12.3 rows=43602 loops=1)
+                    -> Single-row index lookup on g using PRIMARY (app_id=cg.game_id)  (cost=0.25 rows=1) (actual time=331e-6..377e-6 rows=1 loops=43602)

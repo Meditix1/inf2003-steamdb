@@ -1,0 +1,2 @@
+-> Limit/Offset: 24/23976 row(s)  (cost=7168 rows=24) (actual time=248..248 rows=24 loops=1)
+    -> Index scan on game using idx_p5_score_id  (cost=7168 rows=24000) (actual time=0.0822..247 rows=24000 loops=1)

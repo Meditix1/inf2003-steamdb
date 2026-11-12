@@ -1,0 +1,410 @@
+{
+  "explainVersion": "1",
+  "stages": [
+    {
+      "$cursor": {
+        "queryPlanner": {
+          "namespace": "steamdb.games",
+          "parsedQuery": {},
+          "indexFilterSet": false,
+          "queryHash": "3884426A",
+          "planCacheShapeHash": "3884426A",
+          "planCacheKey": "4913B3D4",
+          "optimizationTimeMillis": 119,
+          "cursorType": "regular",
+          "maxIndexedOrSolutionsReached": false,
+          "maxIndexedAndSolutionsReached": false,
+          "maxScansToExplodeReached": false,
+          "prunedSimilarIndexes": false,
+          "winningPlan": {
+            "isCached": false,
+            "stage": "PROJECTION_SIMPLE",
+            "transformBy": {
+              "genres": 1,
+              "negative": 1,
+              "positive": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "nss": "steamdb.games",
+              "direction": "forward"
+            }
+          },
+          "rejectedPlans": []
+        },
+        "executionStats": {
+          "executionSuccess": true,
+          "nReturned": 50000,
+          "executionTimeMillis": 4142,
+          "totalKeysExamined": 0,
+          "totalDocsExamined": 50000,
+          "executionStages": {
+            "isCached": false,
+            "stage": "PROJECTION_SIMPLE",
+            "nReturned": 50000,
+            "executionTimeMillisEstimate": 1372,
+            "works": 50001,
+            "advanced": 50000,
+            "needTime": 0,
+            "needYield": 0,
+            "saveState": 45,
+            "restoreState": 44,
+            "isEOF": 1,
+            "transformBy": {
+              "genres": 1,
+              "negative": 1,
+              "positive": 1,
+              "_id": 0
+            },
+            "inputStage": {
+              "stage": "COLLSCAN",
+              "nReturned": 50000,
+              "executionTimeMillisEstimate": 1031,
+              "works": 50001,
+              "advanced": 50000,
+              "needTime": 0,
+              "needYield": 0,
+              "saveState": 45,
+              "restoreState": 44,
+              "isEOF": 1,
+              "nss": "steamdb.games",
+              "direction": "forward",
+              "docsExamined": 50000
+            }
+          }
+        }
+      },
+      "nReturned": 50000,
+      "executionTimeMillisEstimate": 1797
+    },
+    {
+      "$unwind": {
+        "path": "$genres"
+      },
+      "nReturned": 144076,
+      "executionTimeMillisEstimate": 2314
+    },
+    {
+      "$group": {
+        "_id": "$genres",
+        "games": {
+          "$sum": {
+            "$const": 1
+          }
+        },
+        "avgScore": {
+          "$avg": {
+            "$let": {
+              "vars": {
+                "p": {
+                  "$ifNull": [
+                    "$positive",
+                    {
+                      "$const": 0
+                    }
+                  ]
+                },
+                "n": {
+                  "$ifNull": [
+                    "$negative",
+                    {
+                      "$const": 0
+                    }
+                  ]
+                }
+              },
+              "in": {
+                "$let": {
+                  "vars": {
+                    "t": {
+                      "$add": [
+                        "$$p",
+                        "$$n"
+                      ]
+                    }
+                  },
+                  "in": {
+                    "$cond": [
+                      {
+                        "$eq": [
+                          "$$t",
+                          {
+                            "$const": 0
+                          }
+                        ]
+                      },
+                      {
+                        "$const": 0
+                      },
+                      {
+                        "$divide": [
+                          {
+                            "$subtract": [
+                              {
+                                "$divide": [
+                                  {
+                                    "$add": [
+                                      "$$p",
+                                      {
+                                        "$const": 1.9208
+                                      }
+                                    ]
+                                  },
+                                  "$$t"
+                                ]
+                              },
+                              {
+                                "$divide": [
+                                  {
+                                    "$multiply": [
+                                      {
+                                        "$const": 1.96
+                                      },
+                                      {
+                                        "$sqrt": [
+                                          {
+                                            "$add": [
+                                              {
+                                                "$divide": [
+                                                  {
+                                                    "$multiply": [
+                                                      "$$p",
+                                                      "$$n"
+                                                    ]
+                                                  },
+                                                  "$$t"
+                                                ]
+                                              },
+                                              {
+                                                "$const": 0.9604
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  "$$t"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "$add": [
+                              {
+                                "$const": 1
+                              },
+                              {
+                                "$divide": [
+                                  {
+                                    "$const": 3.8416
+                                  },
+                                  "$$t"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "$willBeMerged": false
+      },
+      "nReturned": 28,
+      "executionTimeMillisEstimate": 4019,
+      "maxAccumulatorMemoryUsageBytes": {
+        "games": 5376,
+        "avgScore": 4704
+      },
+      "totalOutputDataSizeBytes": 7940,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledDataStorageSize": 0,
+      "spilledBytes": 0,
+      "spilledRecords": 0,
+      "peakTrackedMemBytes": 10936
+    },
+    {
+      "$match": {
+        "games": {
+          "$gte": 50
+        }
+      },
+      "nReturned": 24,
+      "executionTimeMillisEstimate": 4023
+    },
+    {
+      "$sort": {
+        "sortKey": {
+          "avgScore": -1
+        }
+      },
+      "totalDataSizeSortedBytesEstimate": 7018,
+      "usedDisk": false,
+      "spills": 0,
+      "spilledBytes": 0,
+      "spilledRecords": 0,
+      "spilledDataStorageSize": 0,
+      "nReturned": 24,
+      "executionTimeMillisEstimate": 4023,
+      "peakTrackedMemBytes": 7018
+    }
+  ],
+  "queryShapeHash": "221B3A9A6CD3E1691DFF1D00D6DCAA418EF894A911414BFB6F3CF4E79C6860FE",
+  "serverInfo": {
+    "host": "b508008a5194",
+    "port": 27017,
+    "version": "8.3.11",
+    "gitVersion": "b8b83d6e6e1aed495578ad8c6f9234ad329c9955"
+  },
+  "serverParameters": {
+    "internalQueryFacetBufferSizeBytes": 104857600,
+    "internalDocumentSourceGroupMaxMemoryBytes": 104857600,
+    "internalQueryMaxBlockingSortMemoryUsageBytes": 104857600,
+    "internalDocumentSourceSetWindowFieldsMaxMemoryBytes": 104857600,
+    "internalQueryFacetMaxOutputDocSizeBytes": 104857600,
+    "internalLookupStageIntermediateDocumentMaxSizeBytes": 104857600,
+    "internalQueryProhibitBlockingMergeOnMongoS": 0,
+    "internalQueryMaxAddToSetBytes": 104857600,
+    "internalQueryFrameworkControl": "trySbeRestricted",
+    "internalQueryPlannerIgnoreIndexWithCollationForRegex": 1
+  },
+  "command": {
+    "aggregate": "games",
+    "pipeline": [
+      {
+        "$unwind": "$genres"
+      },
+      {
+        "$group": {
+          "_id": "$genres",
+          "games": {
+            "$sum": 1
+          },
+          "avgScore": {
+            "$avg": {
+              "$let": {
+                "vars": {
+                  "p": {
+                    "$ifNull": [
+                      "$positive",
+                      0
+                    ]
+                  },
+                  "n": {
+                    "$ifNull": [
+                      "$negative",
+                      0
+                    ]
+                  }
+                },
+                "in": {
+                  "$let": {
+                    "vars": {
+                      "t": {
+                        "$add": [
+                          "$$p",
+                          "$$n"
+                        ]
+                      }
+                    },
+                    "in": {
+                      "$cond": [
+                        {
+                          "$eq": [
+                            "$$t",
+                            0
+                          ]
+                        },
+                        0,
+                        {
+                          "$divide": [
+                            {
+                              "$subtract": [
+                                {
+                                  "$divide": [
+                                    {
+                                      "$add": [
+                                        "$$p",
+                                        1.9208
+                                      ]
+                                    },
+                                    "$$t"
+                                  ]
+                                },
+                                {
+                                  "$divide": [
+                                    {
+                                      "$multiply": [
+                                        1.96,
+                                        {
+                                          "$sqrt": {
+                                            "$add": [
+                                              {
+                                                "$divide": [
+                                                  {
+                                                    "$multiply": [
+                                                      "$$p",
+                                                      "$$n"
+                                                    ]
+                                                  },
+                                                  "$$t"
+                                                ]
+                                              },
+                                              0.9604
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    },
+                                    "$$t"
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "$add": [
+                                1,
+                                {
+                                  "$divide": [
+                                    3.8416,
+                                    "$$t"
+                                  ]
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "$match": {
+          "games": {
+            "$gte": 50
+          }
+        }
+      },
+      {
+        "$sort": {
+          "avgScore": -1
+        }
+      }
+    ],
+    "cursor": {},
+    "$db": "steamdb"
+  },
+  "ok": 1
+}
