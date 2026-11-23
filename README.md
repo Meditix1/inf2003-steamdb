@@ -4,7 +4,7 @@ A Steam games web application on two databases: MySQL 8.4 (accounts, library, wi
 
 ## Quick start
 
-Full step-by-step instructions are in the user manual: [docs/User_Manual.pdf] (docs/User_Manual.pdf). In short:
+Full step-by-step instructions are in the user manual: [docs/User_Manual.pdf](docs/User_Manual.pdf). In short:
 
 1. `npm install`
 2. Start MySQL 8.4 and MongoDB 8 in Docker as `steamdb-mysql` and `steamdb-mongodb` (manual, Section 3).
